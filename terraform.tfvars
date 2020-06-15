@@ -50,5 +50,5 @@ cac_admin_password          = ""
 windows_std_admin_username  = ""
 windows_std_admin_password  = ""
 windows_std_hostname        = "windows-std-workstation"
-windows_std_instance_count  = 1
+windows_std_count           = 1
 windows_std_vm_size         = "Standard_B2ms"
