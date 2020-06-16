@@ -1,3 +1,7 @@
+variable "subscription_id" {}
+variable "client_id" {}
+variable "client_secret" {}
+
 variable "base_name" {
   description = "Base name for all resources of all deployments"
 }
