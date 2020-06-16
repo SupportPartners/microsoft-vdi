@@ -173,7 +173,7 @@ resource "azurerm_private_dns_srv_record" "dns-cac" {
 }
 
 resource "azurerm_private_dns_srv_record" "dns-ldaps" {
-  name                = "_ldap._tcp.${var.base_name}-dc.${var.active_directory_netbios_name}"
+  name                = "_ldap._tcp.vm-vdi-dc${var.deployment_index}.${var.active_directory_netbios_name}"
   zone_name           = azurerm_private_dns_zone.dns.name
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   ttl                 = 300
