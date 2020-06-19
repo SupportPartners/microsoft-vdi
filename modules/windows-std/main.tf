@@ -14,6 +14,7 @@ resource "azurerm_template_deployment" "windows" {
     "base_name"                   = "${var.base_name}"
     "count_index"                 = "${count.index + 1}"
     "location"                    = "${var.azure_region}"
+    "image_id"                    = "${var.image_id}"
     "vmSize"                      = "${var.vm_size}"
     "application_id"              = "${var.application_id}"
     "aad_client_secret"           = "${var.aad_client_secret}"

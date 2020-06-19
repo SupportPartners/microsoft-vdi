@@ -384,6 +384,7 @@ module "windows-std" {
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
   base_name                   = var.base_name
+  image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
   ad_service_account_username = var.ad_admin_username

@@ -207,6 +207,11 @@ variable "safe_mode_admin_password" {
   type        = string
 }
 
+variable "golden_image_id" {
+  description = "Id of the golden image in shared image gallery"
+  type        = string
+}
+
 variable "_artifactsLocation" {
   description = "The base URI where artifacts required by this template are located including a trailing '/'"
 }
