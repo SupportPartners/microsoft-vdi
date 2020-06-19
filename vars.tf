@@ -15,6 +15,19 @@ variable "deployment_index" {
   description = "Number (index) of the deployment"
 }
 
+variable "storage_name" {
+  description = "Base name for Standard/Premium storage. Will be prefixed with 'ss'"
+}
+
+variable "is_premium_storage" {
+  description = "Type (account tier) of storage"
+  default = false
+}
+
+variable "diag_storage_name" {
+  description = "Base name for diagnostic storage. Will be prefixed with 'stdiag'"
+}
+
 variable "cam_url" {
   description = "Cloud Access Manager URL"
 }
@@ -206,4 +219,9 @@ variable "_artifactsLocation" {
 variable "_artifactsLocationSasToken" {
   description = "Sas Token of the URL is optional, only if required for security reasons"
   type        = string
+}
+
+locals {
+  dc_virtual_machine_name  = "vm-vdi-dc${var.deployment_index}"
+  cac_virtual_machine_name = "vm-vdi-cac${var.deployment_index}"
 }

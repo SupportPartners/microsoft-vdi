@@ -3,6 +3,16 @@ resource "azurerm_resource_group" "vdi_resource_group" {
   name     = "rg-${var.base_name}-infra-${var.deployment_index}"
 }
 
+module "storage" {
+  source = "./modules/storage"
+
+  resource_group_name = azurerm_resource_group.vdi_resource_group.name
+  location            = var.location
+  storage_name        = var.storage_name
+  is_premium_storage  = var.is_premium_storage
+  diag_storage_name   = var.diag_storage_name
+}
+
 data "http" "myip" {
   url = "https://ipinfo.io/ip"
 }
@@ -39,7 +49,7 @@ resource "azurerm_subnet" "workstation" {
 }
 
 resource "azurerm_public_ip" "dc_ip" {
-  name                    = "pip-vm-vdi-dc-${var.deployment_index}"
+  name                    = "pip-${local.dc_virtual_machine_name}-${var.deployment_index}"
   location                = var.location
   resource_group_name     = azurerm_resource_group.vdi_resource_group.name
   allocation_method       = "Static"
@@ -47,7 +57,7 @@ resource "azurerm_public_ip" "dc_ip" {
 }
 
 resource "azurerm_public_ip" "cac" {
-  name                    = "pip-vm-vdi-cac-${var.deployment_index}"
+  name                    = "pip-${local.cac_virtual_machine_name}-${var.deployment_index}"
   location                = var.location
   resource_group_name     = azurerm_resource_group.vdi_resource_group.name
   allocation_method       = "Static"
@@ -101,7 +111,7 @@ resource "azurerm_subnet_nat_gateway_association" "nat" {
 }
 
 resource "azurerm_network_interface" "dc_nic" {
-  name                = "nic-${var.deployment_index}-vm-vdi-dc"
+  name                = "nic-${var.deployment_index}-${local.dc_virtual_machine_name}"
   location            = var.location
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   ip_configuration {
@@ -125,7 +135,7 @@ resource "null_resource" "delay_nic_dc" {
 }
 
 resource "azurerm_network_interface" "cac" {
-  name                = "nic-${var.deployment_index}-vm-vdi-cac"
+  name                = "nic-${var.deployment_index}-${local.cac_virtual_machine_name}"
   location            = var.location
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   ip_configuration {
@@ -312,6 +322,7 @@ module "active-directory-domain" {
   location            = azurerm_resource_group.vdi_resource_group.location
   deployment_index    = var.deployment_index
 
+  virtual_machine_name          = local.dc_virtual_machine_name
   active_directory_domain_name  = "${var.active_directory_netbios_name}.dns.internal"
   active_directory_netbios_name = var.active_directory_netbios_name
   ad_admin_username             = var.ad_admin_username
@@ -336,6 +347,7 @@ module "cac" {
   location            = azurerm_resource_group.vdi_resource_group.location
   deployment_index    = var.deployment_index
 
+  virtual_machine_name        = local.cac_virtual_machine_name
   cam_url                     = var.cam_url
   pcoip_registration_code     = var.pcoip_registration_code
   cac_token                   = var.cac_token

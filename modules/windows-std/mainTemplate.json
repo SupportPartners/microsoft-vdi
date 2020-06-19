@@ -8,6 +8,12 @@
         "description": "Base name of new resources. Must be <= 9 characters."
       }
     },
+    "count_index": {
+      "type": "string",
+      "metadata": {
+        "description": "Terraform count index of the resource"
+      }
+    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -145,14 +151,14 @@
   "location": "[parameters('location')]",
   "vmSize": "[parameters('vmSize')]",
   "VMDiskType": "StandardSSD_LRS",
-  
+
   "ipconfName": "[concat(variables('vmName'),'-ipconf')]",
 
   "SubNetID": "[parameters('SubNetID')]",
-    
-  "nicName": "[concat(variables('vmName'),'-nic')]",
+
+  "nicName": "[concat('nic-', parameters('count_index'), '-', variables('vmName'))]",
   "nicId": "[resourceId(parameters('publicIpRGName'), 'Microsoft.Network/networkInterfaces',variables('nicName'))]",
-  
+
   "ExtName": "[concat(variables('vmName'),'/CustomExtV0.1')]",
   "nsgId": "[parameters('nsgID')]",
 
@@ -242,23 +248,23 @@
       "publisher": "Microsoft.Compute",
       "type": "CustomScriptExtension",
       "typeHandlerVersion": "1.9",
-      "autoUpgradeMinorVersion": true,      
+      "autoUpgradeMinorVersion": true,
       "settings": {
-          "fileUris": [
-                "[uri(parameters('_artifactsLocation'), concat(variables('Script2Run'), parameters('_artifactsLocationSasToken')))]",
-                "[variables('Sript2RunUri')]"
-            ]
-        },
+        "fileUris": [
+              "[uri(parameters('_artifactsLocation'), concat(variables('Script2Run'), parameters('_artifactsLocationSasToken')))]",
+              "[variables('Sript2RunUri')]"
+          ]
+      },
       "protectedSettings": {
-             "commandToExecute": "[ variables('cmdToExecute')]"
-       }
+        "commandToExecute": "[ variables('cmdToExecute')]"
+      }
     }
   }
 ],
 "outputs": {
   "private-ip":{
-        "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))).ipConfigurations[0].properties.privateIPAddress]",
-        "type": "string"
-    }
+    "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))).ipConfigurations[0].properties.privateIPAddress]",
+    "type": "string"
+  }
 }
 }

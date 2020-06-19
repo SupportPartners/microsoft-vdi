@@ -43,6 +43,9 @@ client_id       = ""
 client_secret   = ""
 sp_tenant_id    = ""
 
+storage_name             = ""
+is_premium_storage       = false
+diag_storage_name        = ""
 deployment_index         = "001"
 location                 = ""
 pcoip_registration_code  = ""

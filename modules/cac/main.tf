@@ -8,7 +8,7 @@
 resource "azurerm_virtual_machine" "cac" {
   depends_on = [var.dns_zone_id]
 
-  name                  = "vm-vdi-cac${var.deployment_index}"
+  name                  = var.virtual_machine_name
   location              = var.location
   resource_group_name   = var.resource_group_name
   network_interface_ids = [var.nic_id, ]

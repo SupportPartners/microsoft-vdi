@@ -22,7 +22,7 @@ data "template_file" "setup-script" {
     aad_client_secret         = var.aad_client_secret
     tenant_id                 = var.tenant_id
     safe_admin_pass_secret_id = var.safe_admin_pass_secret_id
-    virtual_machine_name      = local.virtual_machine_name
+    virtual_machine_name      = var.virtual_machine_name
   }
 }
 
@@ -36,7 +36,7 @@ data "template_file" "new-domain-users-script" {
 }
 
 resource "azurerm_windows_virtual_machine" "domain-controller" {
-  name                = local.virtual_machine_name
+  name                = var.virtual_machine_name
   resource_group_name = var.resource_group_name
   location            = var.location
   size                = var.dc_machine_type

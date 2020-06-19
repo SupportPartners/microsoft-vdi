@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+variable "virtual_machine_name" {
+  description = "Virtual machine name"
+}
+
 variable "location" {
   description = "The Azure Region in which all resources in this example should be created."
 }
@@ -90,11 +94,10 @@ variable "_artifactsLocation" {
 
 locals {
   use_secret_or_not    = var.ad_admin_password != "" ? { ad_admin_password = var.ad_admin_password } : { ad_admin_password = tostring(data.azurerm_key_vault_secret.ad-pass[0].value) }
-  virtual_machine_name = "vm-vdi-dc${var.deployment_index}"
-  virtual_machine_fqdn = join(".", [local.virtual_machine_name, var.active_directory_domain_name])
+  virtual_machine_fqdn = join(".", [var.virtual_machine_name, var.active_directory_domain_name])
   auto_logon_data      = "<AutoLogon><Password><Value>${local.use_secret_or_not.ad_admin_password}</Value></Password><Enabled>true</Enabled><LogonCount>1</LogonCount><Username>${var.ad_admin_username}</Username></AutoLogon>"
   first_logon_data     = file("${path.module}/files/FirstLogonCommands.xml")
-  custom_data_params   = "Param($RemoteHostName = \"${local.virtual_machine_fqdn}\", $ComputerName = \"${local.virtual_machine_name}\")"
+  custom_data_params   = "Param($RemoteHostName = \"${local.virtual_machine_fqdn}\", $ComputerName = \"${var.virtual_machine_name}\")"
   custom_data          = base64encode(join(" ", [local.custom_data_params, file("${path.module}/files/winrm.ps1")]))
 
   new_domain_users           = var.domain_users_list == "" ? 0 : 1
