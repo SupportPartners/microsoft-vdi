@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+variable "virtual_machine_name" {
+  description = "Virtual machine name"
+}
+
 variable "deployment_index" {
   description = "The Azure Region in which all resources in this example should be created."
 }

@@ -202,3 +202,8 @@ variable "_artifactsLocationSasToken" {
   description = "Sas Token of the URL is optional, only if required for security reasons"
   type        = string
 }
+
+locals {
+  dc_virtual_machine_name  = "vm-vdi-dc${var.deployment_index}"
+  cac_virtual_machine_name = "vm-vdi-cac${var.deployment_index}"
+}

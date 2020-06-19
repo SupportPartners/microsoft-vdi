@@ -12,6 +12,7 @@ resource "azurerm_template_deployment" "windows" {
   template_body       = "${file("${path.module}/mainTemplate.json")}"
   parameters = {
     "base_name"                   = "${var.base_name}"
+    "count_index"                 = "${count.index + 1}"
     "location"                    = "${var.azure_region}"
     "vmSize"                      = "${var.vm_size}"
     "application_id"              = "${var.application_id}"
@@ -22,7 +23,7 @@ resource "azurerm_template_deployment" "windows" {
     "ad_service_account_password" = "${var.ad_service_account_password}"
     "ad_service_account_username" = "${var.ad_service_account_username}"
     "domain_name"                 = "${var.domain_name}"
-    "vmName"                      = "vm-vdi-win${count.index}"
+    "vmName"                      = "vm-vdi-win${count.index + 1}"
     "nsgID"                       = "${var.nsgID}"
     "subnetID"                    = "${var.subnetID}"
     "adminName"                   = "${var.admin_name}"
