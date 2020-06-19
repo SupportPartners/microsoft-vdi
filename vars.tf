@@ -15,6 +15,19 @@ variable "deployment_index" {
   description = "Number (index) of the deployment"
 }
 
+variable "storage_name" {
+  description = "Base name for Standard/Premium storage. Will be prefixed with 'ss'"
+}
+
+variable "is_premium_storage" {
+  description = "Type (account tier) of storage"
+  default = false
+}
+
+variable "diag_storage_name" {
+  description = "Base name for diagnostic storage. Will be prefixed with 'stdiag'"
+}
+
 variable "cam_url" {
   description = "Cloud Access Manager URL"
 }
