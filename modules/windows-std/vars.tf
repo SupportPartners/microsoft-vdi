@@ -30,6 +30,11 @@ variable "name" {
   type        = string
 }
 
+variable "image_id" {
+  description = "Id of the image in shared image gallery"
+  type        = string
+}
+
 variable "pcoip_agent_location" {
   description = "URL of Teradici PCoIP Standard Agent"
   default     = "https://downloads.teradici.com/win/stable/"

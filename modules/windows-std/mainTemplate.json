@@ -15,6 +15,12 @@
         "description": "Resource Location."
       }
     },
+    "imageId": {
+      "type": "string",
+      "metadata": {
+        "description": "Id of the image in shared image gallery."
+      }
+    },
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_B2ms",
@@ -207,19 +213,7 @@
       },
       "storageProfile": {
         "imageReference":  {
-          "publisher": "MicrosoftWindowsServer",
-          "offer": "WindowsServer",
-          "sku": "2016-Datacenter",
-          "version": "latest"
-        },
-        "osDisk": {
-          "osType": "Windows",
-          "name": "[concat(parameters('vmName'),'-disk0')]",
-          "caching": "ReadWrite",
-          "createOption": "FromImage",
-          "managedDisk": {
-            "storageAccountType": "[variables('VMDiskType')]"
-          }
+          "id": "[parameters('imageId')]"
         }
       },
       "osProfile": {
