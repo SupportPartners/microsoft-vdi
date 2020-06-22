@@ -7,6 +7,7 @@ module "storage" {
   source = "./modules/storage"
 
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
+  deployment_index    = var.deployment_index
   location            = var.location
   storage_name        = var.storage_name
   is_premium_storage  = var.is_premium_storage

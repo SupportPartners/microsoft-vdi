@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "standard-storage-account" {
-  name                     = "ss${var.storage_name}"
+  name                     = "ss${var.storage_name}${var.deployment_index}"
   count                    = var.is_premium_storage == true ? 0 : 1
   resource_group_name      = "${var.resource_group_name}"
   location                 = "${var.location}"
@@ -10,7 +10,7 @@ resource "azurerm_storage_account" "standard-storage-account" {
 }
 
 resource "azurerm_storage_account" "premium-storage-account" {
-  name                     = "ss${var.storage_name}"
+  name                     = "ss${var.storage_name}${var.deployment_index}"
   count                    = var.is_premium_storage == true ? 1 : 0
   resource_group_name      = "${var.resource_group_name}"
   location                 = "${var.location}"
@@ -20,7 +20,7 @@ resource "azurerm_storage_account" "premium-storage-account" {
 }
 
 resource "azurerm_storage_account" "diagnostic-storage-account" {
-  name                     = "stdiag${var.diag_storage_name}"
+  name                     = "stdiag${var.diag_storage_name}${var.deployment_index}"
   resource_group_name      = "${var.resource_group_name}"
   location                 = "${var.location}"
   account_tier             = "Standard"

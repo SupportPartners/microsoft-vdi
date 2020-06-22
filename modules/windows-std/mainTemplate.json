@@ -21,7 +21,7 @@
         "description": "Resource Location."
       }
     },
-    "imageId": {
+    "image_id": {
       "type": "string",
       "metadata": {
         "description": "Id of the image in shared image gallery."
@@ -219,7 +219,7 @@
       },
       "storageProfile": {
         "imageReference":  {
-          "id": "[parameters('imageId')]"
+          "id": "[parameters('image_id')]"
         }
       },
       "osProfile": {
