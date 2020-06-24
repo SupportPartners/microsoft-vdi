@@ -141,6 +141,31 @@ resource "null_resource" "upload-domain-users-list" {
   }
 }
 
+resource "null_resource" "create-users" {
+  triggers = {
+    instance_id = azurerm_windows_virtual_machine.domain-controller.id
+  }
+
+  for_each = var.ad_users
+
+  connection {
+    type     = "winrm"
+    user     = var.ad_admin_username
+    password = local.use_secret_or_not.ad_admin_password
+    host     = azurerm_windows_virtual_machine.domain-controller.public_ip_address
+    port     = "5986"
+    https    = true
+    insecure = true
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "powershell New-ADUser -Name ${each.key} -SamAccountName ${each.key} -AccountPassword(ConvertTo-SecureString -AsPlainText -String ${each.value} -Force)  -Enabled $true"
+    ]
+  }
+}
+
+
 resource "null_resource" "run-setup-script" {
   depends_on = [null_resource.upload-scripts]
   triggers = {

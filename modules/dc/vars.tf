@@ -92,6 +92,10 @@ variable "_artifactsLocation" {
   default     = ""
 }
 
+variable "ad_users" {
+  type       = map
+}
+
 locals {
   use_secret_or_not    = var.ad_admin_password != "" ? { ad_admin_password = var.ad_admin_password } : { ad_admin_password = tostring(data.azurerm_key_vault_secret.ad-pass[0].value) }
   virtual_machine_fqdn = join(".", [var.virtual_machine_name, var.active_directory_domain_name])

@@ -31,6 +31,7 @@ resource "azurerm_subnet" "dc" {
   address_prefix       = var.dc_subnet_cidr
   resource_group_name  = azurerm_resource_group.vdi_resource_group.name
   virtual_network_name = azurerm_virtual_network.vdi_virtual_network.name
+  ad_users             = local.ad_users
 }
 
 resource "azurerm_subnet" "cac" {
