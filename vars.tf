@@ -221,22 +221,7 @@ variable "_artifactsLocationSasToken" {
   type        = string
 }
 
-variable "ad_users" {
-  type        = string
-  description = "Comma separated list of user:password\nExample:\nuser1:password1,user2:password2,user3:password3"
-}
-
 locals {
   dc_virtual_machine_name  = "vm-vdi-dc${var.deployment_index}"
   cac_virtual_machine_name = "vm-vdi-cac${var.deployment_index}"
-  ad_users = zipmap(
-    [
-      for raw_user in split(",", var.ad_users) : 
-        trimspace(element(split(":", raw_user), 0))
-    ],
-    [
-      for raw_user in split(",", var.ad_users) : 
-        trimspace(element(split(":", raw_user), 1))
-    ]
-  )
 }
