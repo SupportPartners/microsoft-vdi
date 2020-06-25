@@ -7,6 +7,10 @@ variable "base_name" {
   description = "Base name for all resources of all deployments"
 }
 
+variable "resource_group_name" {
+  description = "Resource group name. User input, overwriting name convention"
+}
+
 variable "location" {
   description = "The Azure Region in which all resources in this example should be created."
 }

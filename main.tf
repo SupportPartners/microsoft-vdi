@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "vdi_resource_group" {
   location = var.location
-  name     = "rg-${var.base_name}-infra-${var.deployment_index}"
+  name     = var.resource_group_name != "" ? var.resource_group_name : "rg-${var.base_name}-infra-${var.deployment_index}"
 }
 
 module "storage" {
