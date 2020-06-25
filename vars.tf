@@ -28,6 +28,11 @@ variable "diag_storage_name" {
   description = "Base name for diagnostic storage. Will be prefixed with 'stdiag'"
 }
 
+variable "file_share_quota" {
+  default = 5120
+  description = "Provisioned capacity of file share in GiB. Possible values 100-102400. Default is 5120 Gib"
+}
+
 variable "cam_url" {
   description = "Cloud Access Manager URL"
 }

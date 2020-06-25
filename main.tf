@@ -12,6 +12,7 @@ module "storage" {
   storage_name        = var.storage_name
   is_premium_storage  = var.is_premium_storage
   diag_storage_name   = var.diag_storage_name
+  file_share_quota    = var.file_share_quota
 }
 
 data "http" "myip" {
