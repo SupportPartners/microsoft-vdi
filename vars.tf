@@ -23,11 +23,6 @@ variable "storage_name" {
   description = "Base name for Standard/Premium storage. Will be prefixed with 'ss'"
 }
 
-variable "is_premium_storage" {
-  description = "Type (account tier) of storage"
-  default = false
-}
-
 variable "diag_storage_name" {
   description = "Base name for diagnostic storage. Will be prefixed with 'stdiag'"
 }
@@ -165,6 +160,10 @@ variable "windows_std_admin_password" {
 variable "windows_std_vm_size" {
   description = "Size of the VM to deploy"
   type        = string
+}
+
+variable "windows_std_persona" {
+  description = "Number of windows standard agents to deploy"
 }
 
 variable "windows_std_count" {
