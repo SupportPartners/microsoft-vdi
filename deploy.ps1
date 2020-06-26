@@ -26,6 +26,41 @@ Function DownloadTerraform([string] $directory)
     Remove-Item -Path $terraform_zip
 }
 
+Function CreateUsers
+{
+    if ((Test-Path ".\domain_users_list.csv") -eq $False) {
+        $isUserAdding = $True
+        $users = @()
+    
+        Do {
+            $doContinue = Read-Host "Do you want to add user? y/N"
+            If ($doContinue -eq "y") {
+                $isUserAdding = $True
+            } Else {
+                $isUserAdding = $False
+                continue
+            }
+    
+            $username = Read-Host "Username"
+            $password = Read-Host "Password"
+            $firstname = Read-Host "Firstname"
+            $lastname = Read-Host "Lastname"
+            $isadmin =  Read-Host "Is admin? true/false"
+    
+            $users += [pscustomobject]@{
+                username = $username
+                password = $password
+                firstname = $firstname
+                lastname = $lastname
+                isadmin = $isadmin
+            }
+        }
+        Until ($isUserAdding -eq $False)
+    
+        $users | Export-Csv -NoTypeInformation -Path ".\domain_users_list.csv"
+    }
+}
+
 $vars =
 ""
 
@@ -38,6 +73,8 @@ $tfvars_file = "user-vars.tfvars"
 New-Item -Path . -Name $tfvars_file -ItemType "file" -Force -Value $vars
 
 DownloadTerraform($repo_directory)
+
+CreateUsers
 
 .\terraform.exe init
 .\terraform.exe apply -var-file="$tfvars_file"
