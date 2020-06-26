@@ -154,20 +154,22 @@
           "description": "The base URI where artifacts required by this template are located including a trailing '/'"
       },
       "defaultValue": "[deployment().properties.templateLink.uri]"
-  },
-  "_artifactsLocationSasToken": {
-      "type": "securestring",
-      "metadata": {
-          "description": "The sasToken required to access _artifactsLocation."
-      },
-      "defaultValue": ""
-  },
-  "tags": {
-    "type": "object",
-    "metadata": {
-      "description": "Tags for VM"
+    },
+    "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+            "description": "The sasToken required to access _artifactsLocation."
+        },
+        "defaultValue": ""
+    },
+    "vmTags": {
+      "type": "object",
+      "defaultValue": {
+        "Type": "workstation",
+        "OS": "Windows10",
+        "Build": "1909"
+      }
     }
-  }
 },
  
 "variables": {
@@ -234,7 +236,7 @@
     "name": "[variables('vmName')]",
     "apiVersion": "2019-03-01",
     "location": "[variables('location')]",
-    "tags": "[parameters('tags')]",
+    "tags": "[parameters('vmTags')]",
     "dependsOn": [
       "[variables('nicId')]"
     ],

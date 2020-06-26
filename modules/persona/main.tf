@@ -35,11 +35,6 @@ resource "azurerm_template_deployment" "windows" {
     "TeradiciRegKey"              = "${var.pcoip_registration_code}"
     "_artifactsLocation"          = "${var._artifactsLocation}"
     "_artifactsLocationSasToken"  = "${var._artifactsLocationSasToken}"
-    "tags"                        = "${merge(var.tags, map(
-        "Type", "workstation",
-        "OS", "Windows10",
-        "Build", "1909"
-    ))}"
   }
   deployment_mode = "Incremental"
 }
