@@ -250,14 +250,13 @@
         },
         "dataDisks": [
           {
-            "name": "[concat(variables('vmName'), '-disk')]",
             "lun": 0,
             "createOption": "FromImage"
           },
           {
             "name": "[concat(variables('vmName'), '-SSD-E3-disk2')]",
             "diskSizeGB": 16,
-            "lun": 0,
+            "lun": 1,
             "createOption": "Empty",
             "managedDisk": {
               "storageAccountType": "StandardSSD_LRS"
