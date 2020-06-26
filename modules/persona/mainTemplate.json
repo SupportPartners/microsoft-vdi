@@ -161,6 +161,12 @@
           "description": "The sasToken required to access _artifactsLocation."
       },
       "defaultValue": ""
+  },
+  "tags": {
+    "type": "object",
+    "metadata": {
+      "description": "Tags for VM"
+    }
   }
 },
  
@@ -228,6 +234,7 @@
     "name": "[variables('vmName')]",
     "apiVersion": "2019-03-01",
     "location": "[variables('location')]",
+    "tags": "[parameters('tags')]",
     "dependsOn": [
       "[variables('nicId')]"
     ],
@@ -238,7 +245,18 @@
       "storageProfile": {
         "imageReference":  {
           "id": "[parameters('image_id')]"
-        }
+        },
+        "dataDisks": [
+          {
+            "name": "[concat(variables('vmName'), '-SSD-E3-disk2'",
+            "diskSizeGB": 16,
+            "lun": 0,
+            "createOption": "Empty",
+            "managedDisk": {
+              "storageAccountType": "StandardSSD_LRS"
+            }
+          }
+        ]
       },
       "osProfile": {
         "computerName": "[variables('vmName')]",

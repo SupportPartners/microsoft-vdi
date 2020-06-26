@@ -220,6 +220,16 @@ variable "golden_image_id" {
   type        = string
 }
 
+variable "client_name" {
+  description = "Client name for tags. User entry"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment for tags"
+  type        = string
+}
+
 variable "_artifactsLocation" {
   description = "The base URI where artifacts required by this template are located including a trailing '/'"
 }
@@ -232,4 +242,10 @@ variable "_artifactsLocationSasToken" {
 locals {
   dc_virtual_machine_name  = "vm-vdi-dc${var.deployment_index}"
   cac_virtual_machine_name = "vm-vdi-cac${var.deployment_index}"
+  common_tags              = "${map(
+    "Created Date", "${formatdate("MMM DD, YYYY", timestamp())}",
+    "Environment", "${var.environment}",
+    "Client Name", "${var.client_name}",
+    "Createdby", "Supportpartners"
+  )}"
 }

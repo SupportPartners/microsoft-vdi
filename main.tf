@@ -13,6 +13,7 @@ module "storage" {
   is_premium_storage  = var.windows_std_persona > 1
   diag_storage_name   = var.diag_storage_name
   file_share_quota    = var.file_share_quota
+  tags                = local.common_tags
 }
 
 data "http" "myip" {
@@ -443,6 +444,7 @@ module "persona-1" {
   ad_pass_secret_id           = var.ad_pass_secret_id
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
+  tags                        = local.common_tags
 }
 
 module "persona-2" {
@@ -478,6 +480,7 @@ module "persona-2" {
   ad_pass_secret_id           = var.ad_pass_secret_id
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
+  tags                        = local.common_tags
 }
 
 module "persona-3" {
@@ -513,4 +516,5 @@ module "persona-3" {
   ad_pass_secret_id           = var.ad_pass_secret_id
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
+  tags                        = local.common_tags
 }

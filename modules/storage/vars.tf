@@ -26,3 +26,7 @@ variable "diag_storage_name" {
 variable "file_share_quota" {
   description = "Provisioned capacity of file share in GiB. Possible values 100-102400"
 }
+
+variable "tags" {
+  description = "Common tags for storage resource"
+}

@@ -154,3 +154,7 @@ variable "_artifactsLocationSasToken" {
   description = "Sas Token of the URL is optional, only if required for security reasons"
   type        = string
 }
+
+variable "tags" {
+  description = "Common tags for storage resource"
+}

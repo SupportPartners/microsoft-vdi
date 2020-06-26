@@ -21,6 +21,7 @@ golden_image_id               = "/subscriptions/c28be9ee-97ed-4251-ab14-43090bbc
 #_artifactsLocation            = "https://stteradicisa.blob.core.windows.net/teradicisacontainer/"
 _artifactsLocation            = "https://teradicisa.blob.core.windows.net/teradicisacontainer/"
 _artifactsLocationSasToken    = ""
+environment                   = "VDI Demo"
 
 # Leave the following blank, they are only filled when using Azure Key Vault secrets
 application_id                = ""

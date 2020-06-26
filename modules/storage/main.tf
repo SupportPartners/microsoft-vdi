@@ -7,6 +7,10 @@ resource "azurerm_storage_account" "standard-storage-account" {
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
   access_tier              = "Hot"
+  tags                     = "${merge(
+    var.tags,
+    map("Type", "Storage")
+  )}"
 }
 
 resource "azurerm_storage_account" "premium-storage-account" {
@@ -17,6 +21,10 @@ resource "azurerm_storage_account" "premium-storage-account" {
   account_tier             = "Premium"
   account_replication_type = "LRS"
   account_kind             = "FileStorage"
+  tags                     = "${merge(
+    var.tags,
+    map("Type", "Storage")
+  )}"
 }
 
 locals {
