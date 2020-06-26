@@ -1,7 +1,18 @@
-variable "subscription_id" {}
-variable "client_id" {}
-variable "client_secret" {}
-variable "sp_tenant_id" {}
+variable "subscription_id" {
+  description = "Subscription id of deployment"
+}
+
+variable "client_id" {
+  description = "Service principal client id for authorizing in Azure"
+}
+
+variable "client_secret" {
+  description = "Service principal client secret for authorizing in Azure"
+}
+
+variable "sp_tenant_id" {
+  description = "Service principal tenant id for authorizing in Azure"
+}
 
 variable "base_name" {
   description = "Base name for all resources of all deployments"
@@ -163,7 +174,7 @@ variable "windows_std_vm_size" {
 }
 
 variable "windows_std_persona" {
-  description = "Number of windows standard agents to deploy"
+  description = "Persona type of deploying VM"
 }
 
 variable "windows_std_count" {
