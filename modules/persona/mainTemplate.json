@@ -250,6 +250,7 @@
         },
         "dataDisks": [
           {
+            "name": "[concat(variables('vmName'), '-disk')]",
             "lun": 0,
             "createOption": "FromImage"
           },
