@@ -7,6 +7,10 @@ variable "base_name" {
   description = "Base name for all resources of all deployments"
 }
 
+variable "resource_group_name" {
+  description = "Resource group name. User input, overwriting name convention"
+}
+
 variable "location" {
   description = "The Azure Region in which all resources in this example should be created."
 }
@@ -19,13 +23,13 @@ variable "storage_name" {
   description = "Base name for Standard/Premium storage. Will be prefixed with 'ss'"
 }
 
-variable "is_premium_storage" {
-  description = "Type (account tier) of storage"
-  default = false
-}
-
 variable "diag_storage_name" {
   description = "Base name for diagnostic storage. Will be prefixed with 'stdiag'"
+}
+
+variable "file_share_quota" {
+  default = 5120
+  description = "Provisioned capacity of file share in GiB. Possible values 100-102400. Default is 5120 Gib"
 }
 
 variable "cam_url" {
@@ -158,6 +162,10 @@ variable "windows_std_vm_size" {
   type        = string
 }
 
+variable "windows_std_persona" {
+  description = "Number of windows standard agents to deploy"
+}
+
 variable "windows_std_count" {
   description = "Number of windows standard agents to deploy"
 }
@@ -212,6 +220,16 @@ variable "golden_image_id" {
   type        = string
 }
 
+variable "client_name" {
+  description = "Client name for tags. User entry"
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment for tags"
+  type        = string
+}
+
 variable "_artifactsLocation" {
   description = "The base URI where artifacts required by this template are located including a trailing '/'"
 }
@@ -224,4 +242,10 @@ variable "_artifactsLocationSasToken" {
 locals {
   dc_virtual_machine_name  = "vm-vdi-dc${var.deployment_index}"
   cac_virtual_machine_name = "vm-vdi-cac${var.deployment_index}"
+  common_tags              = "${map(
+    "Created Date", "${formatdate("MMM DD, YYYY", timestamp())}",
+    "Environment", "${var.environment}",
+    "Client Name", "${var.client_name}",
+    "Createdby", "Supportpartners"
+  )}"
 }

@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "vdi_resource_group" {
   location = var.location
-  name     = "rg-${var.base_name}-infra-${var.deployment_index}"
+  name     = var.resource_group_name != "" ? var.resource_group_name : "rg-${var.base_name}-infra-${var.deployment_index}"
 }
 
 module "storage" {
@@ -10,8 +10,10 @@ module "storage" {
   deployment_index    = var.deployment_index
   location            = var.location
   storage_name        = var.storage_name
-  is_premium_storage  = var.is_premium_storage
+  is_premium_storage  = var.windows_std_persona > 1
   diag_storage_name   = var.diag_storage_name
+  file_share_quota    = var.file_share_quota
+  tags                = local.common_tags
 }
 
 data "http" "myip" {
@@ -378,12 +380,44 @@ module "cac" {
   _artifactsLocation          = var._artifactsLocation
 }
 
-module "windows-std" {
-  source = "./modules/windows-std"
+# module "windows-std" {
+#   source = "./modules/windows-std"
+
+#   resource_group_name = azurerm_resource_group.vdi_resource_group.name
+#   azure_region        = azurerm_resource_group.vdi_resource_group.location
+
+#   base_name                   = var.base_name
+#   image_id                    = var.golden_image_id
+#   pcoip_registration_code     = var.pcoip_registration_code
+#   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
+#   ad_service_account_username = var.ad_admin_username
+#   ad_service_account_password = var.ad_admin_password
+#   admin_name                  = var.windows_std_admin_username
+#   admin_password              = var.windows_std_admin_password
+#   name                        = var.windows_std_hostname
+#   instance_count              = var.windows_std_count
+#   pcoip_agent_location        = var.pcoip_agent_location
+#   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
+#   nsgID                       = azurerm_network_security_group.nsg.id
+#   subnetID                    = azurerm_subnet.workstation.id
+#   subnet_name                 = azurerm_subnet.workstation.name
+#   vm_size                     = var.windows_std_vm_size
+#   application_id              = var.application_id
+#   aad_client_secret           = var.aad_client_secret
+#   tenant_id                   = var.tenant_id
+#   pcoip_secret_id             = var.pcoip_secret_id
+#   ad_pass_secret_id           = var.ad_pass_secret_id
+#   _artifactsLocation          = var._artifactsLocation
+#   _artifactsLocationSasToken  = var._artifactsLocationSasToken
+# }
+
+module "persona-1" {
+  source = "./modules/persona"
 
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
+  vm_name                     = "Win10Nv6SSD"
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -392,14 +426,17 @@ module "windows-std" {
   ad_service_account_password = var.ad_admin_password
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
-  name                        = var.windows_std_hostname
-  instance_count              = var.windows_std_count
+  host_name                   = var.windows_std_hostname
+  instance_count              = var.windows_std_persona == 1 ? var.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  storage_account             = module.storage.storage_account
+  storage_container           = module.storage.storage_container
+  storage_access_key          = module.storage.storage_access_key
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
   subnet_name                 = azurerm_subnet.workstation.name
-  vm_size                     = var.windows_std_vm_size
+  vm_size                     = "Standard_NV6"
   application_id              = var.application_id
   aad_client_secret           = var.aad_client_secret
   tenant_id                   = var.tenant_id
@@ -407,4 +444,77 @@ module "windows-std" {
   ad_pass_secret_id           = var.ad_pass_secret_id
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
+  tags                        = local.common_tags
+}
+
+module "persona-2" {
+  source = "./modules/persona"
+
+  resource_group_name = azurerm_resource_group.vdi_resource_group.name
+  azure_region        = azurerm_resource_group.vdi_resource_group.location
+
+  vm_name                     = "Win10Nv12SSD"
+  base_name                   = var.base_name
+  image_id                    = var.golden_image_id
+  pcoip_registration_code     = var.pcoip_registration_code
+  domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
+  ad_service_account_username = var.ad_admin_username
+  ad_service_account_password = var.ad_admin_password
+  admin_name                  = var.windows_std_admin_username
+  admin_password              = var.windows_std_admin_password
+  host_name                   = var.windows_std_hostname
+  instance_count              = var.windows_std_persona == 2 ? var.windows_std_count : 0
+  pcoip_agent_location        = var.pcoip_agent_location
+  storage_account             = module.storage.storage_account
+  storage_container           = module.storage.storage_container
+  storage_access_key          = module.storage.storage_access_key
+  vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
+  nsgID                       = azurerm_network_security_group.nsg.id
+  subnetID                    = azurerm_subnet.workstation.id
+  subnet_name                 = azurerm_subnet.workstation.name
+  vm_size                     = "Standard_NV12s_v3"
+  application_id              = var.application_id
+  aad_client_secret           = var.aad_client_secret
+  tenant_id                   = var.tenant_id
+  pcoip_secret_id             = var.pcoip_secret_id
+  ad_pass_secret_id           = var.ad_pass_secret_id
+  _artifactsLocation          = var._artifactsLocation
+  _artifactsLocationSasToken  = var._artifactsLocationSasToken
+  tags                        = local.common_tags
+}
+
+module "persona-3" {
+  source = "./modules/persona"
+
+  resource_group_name = azurerm_resource_group.vdi_resource_group.name
+  azure_region        = azurerm_resource_group.vdi_resource_group.location
+
+  vm_name                     = "Win10Nv24SSD"
+  base_name                   = var.base_name
+  image_id                    = var.golden_image_id
+  pcoip_registration_code     = var.pcoip_registration_code
+  domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
+  ad_service_account_username = var.ad_admin_username
+  ad_service_account_password = var.ad_admin_password
+  admin_name                  = var.windows_std_admin_username
+  admin_password              = var.windows_std_admin_password
+  host_name                   = var.windows_std_hostname
+  instance_count              = var.windows_std_persona == 3 ? var.windows_std_count : 0
+  pcoip_agent_location        = var.pcoip_agent_location
+  storage_account             = module.storage.storage_account
+  storage_container           = module.storage.storage_container
+  storage_access_key          = module.storage.storage_access_key
+  vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
+  nsgID                       = azurerm_network_security_group.nsg.id
+  subnetID                    = azurerm_subnet.workstation.id
+  subnet_name                 = azurerm_subnet.workstation.name
+  vm_size                     = "Standard_NV24s_v3"
+  application_id              = var.application_id
+  aad_client_secret           = var.aad_client_secret
+  tenant_id                   = var.tenant_id
+  pcoip_secret_id             = var.pcoip_secret_id
+  ad_pass_secret_id           = var.ad_pass_secret_id
+  _artifactsLocation          = var._artifactsLocation
+  _artifactsLocationSasToken  = var._artifactsLocationSasToken
+  tags                        = local.common_tags
 }

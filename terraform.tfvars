@@ -21,6 +21,7 @@ golden_image_id               = "/subscriptions/c28be9ee-97ed-4251-ab14-43090bbc
 #_artifactsLocation            = "https://stteradicisa.blob.core.windows.net/teradicisacontainer/"
 _artifactsLocation            = "https://teradicisa.blob.core.windows.net/teradicisacontainer/"
 _artifactsLocationSasToken    = ""
+environment                   = "VDI Demo"
 
 # Leave the following blank, they are only filled when using Azure Key Vault secrets
 application_id                = ""
@@ -43,11 +44,11 @@ client_id       = ""
 client_secret   = ""
 sp_tenant_id    = ""
 
-storage_name             = ""
-is_premium_storage       = false
-diag_storage_name        = ""
 deployment_index         = "001"
 location                 = ""
+storage_name             = ""
+diag_storage_name        = ""
+file_share_quota         = 2048
 pcoip_registration_code  = ""
 ad_admin_username        = ""
 ad_admin_password        = ""
@@ -58,5 +59,6 @@ cac_admin_password          = ""
 windows_std_admin_username  = ""
 windows_std_admin_password  = ""
 windows_std_hostname        = "windows-std-workstation"
+windows_std_persona         = 1
 windows_std_count           = 1
 windows_std_vm_size         = "Standard_B2ms"

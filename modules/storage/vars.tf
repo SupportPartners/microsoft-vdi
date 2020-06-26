@@ -22,3 +22,11 @@ variable "is_premium_storage" {
 variable "diag_storage_name" {
   description = "Base name for diagnostic storage. Will be prefixed with 'stdiag'"
 }
+
+variable "file_share_quota" {
+  description = "Provisioned capacity of file share in GiB. Possible values 100-102400"
+}
+
+variable "tags" {
+  description = "Common tags for storage resource"
+}

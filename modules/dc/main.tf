@@ -136,7 +136,7 @@ resource "null_resource" "upload-domain-users-list" {
   }
 
   provisioner "file" {
-    source      = "domain_users_list.csv"
+    source      = "${path.cwd}/domain_users_list.csv"
     destination = local.domain_users_list_file
   }
 }
