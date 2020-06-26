@@ -250,7 +250,11 @@
         },
         "dataDisks": [
           {
-            "name": "[concat(variables('vmName'), '-SSD-E3-disk2'",
+            "lun": 0,
+            "createOption": "FromImage"
+          },
+          {
+            "name": "[concat(variables('vmName'), '-SSD-E3-disk2')]",
             "diskSizeGB": 16,
             "lun": 0,
             "createOption": "Empty",
