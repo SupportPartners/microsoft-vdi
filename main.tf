@@ -332,7 +332,6 @@ module "active-directory-domain" {
   ad_admin_password             = var.ad_admin_password
   dc_machine_type               = var.dc_machine_type
   nic_id                        = azurerm_network_interface.dc_nic.id
-  domain_users_list             = var.domain_users_list
   ad_pass_secret_name           = var.ad_pass_secret_name
   key_vault_id                  = var.key_vault_id
   application_id                = var.application_id
