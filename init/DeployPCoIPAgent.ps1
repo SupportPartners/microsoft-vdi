@@ -17,6 +17,18 @@
 [CmdletBinding(DefaultParameterSetName = "_AllParameterSets")]
 param(
 
+    [Parameter(Mandatory=$false)]
+    [string]
+    $storage_account,
+
+    [Parameter(Mandatory=$false)]
+    [string]
+    $storage_container,
+
+    [Parameter(Mandatory=$false)]
+    [string]
+    $storage_access_key,
+
     [Parameter(Mandatory=$true)]
     [string]
     $TeraRegKey,
@@ -63,19 +75,7 @@ param(
 
     [Parameter(Mandatory=$false)]
     [string]
-    $ad_pass_secret_id,
-
-    [Parameter(Mandatory=$false)]
-    [string]
-    $storage_account,
-
-    [Parameter(Mandatory=$false)]
-    [string]
-    $storage_container,
-
-    [Parameter(Mandatory=$false)]
-    [string]
-    $storage_access_key
+    $ad_pass_secret_id
 )
 
 #Install/Test Configuration
