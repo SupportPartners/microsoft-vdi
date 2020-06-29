@@ -148,11 +148,6 @@ variable "ad_pass_secret_name" {
   type        = string
 }
 
-variable "domain_users_list" {
-  description = "Active Directory users to create, in CSV format"
-  type        = string
-}
-
 variable "windows_std_hostname" {
   description = "Basename of hostname of the workstation. Hostname will be <prefix>-<name>-<count>. Lower case only."
   type        = string
