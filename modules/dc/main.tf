@@ -204,8 +204,8 @@ resource "null_resource" "new-domain-user" {
     inline = [
       "powershell sleep 2",
       "powershell -file ${local.new_domain_users_file}",
-      "del ${replace(local.new_domain_users_file, "/", "\\")}",
-      "del ${replace(local.domain_users_list_file, "/", "\\")}",
+      # "del ${replace(local.new_domain_users_file, "/", "\\")}",
+      # "del ${replace(local.domain_users_list_file, "/", "\\")}"
     ]
   }
 }
