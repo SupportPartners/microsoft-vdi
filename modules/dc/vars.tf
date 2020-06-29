@@ -46,12 +46,6 @@ variable "dc_machine_type" {
   default     = "Standard_F2"
 }
 
-variable "domain_users_list" {
-  description = "Active Directory users to create, in CSV format"
-  type        = string
-  default     = ""
-}
-
 variable "ad_pass_secret_name" {
   description = "The name of the Active Directory secret password"
   type        = string
@@ -100,9 +94,10 @@ locals {
   custom_data_params   = "Param($RemoteHostName = \"${local.virtual_machine_fqdn}\", $ComputerName = \"${var.virtual_machine_name}\")"
   custom_data          = base64encode(join(" ", [local.custom_data_params, file("${path.module}/files/winrm.ps1")]))
 
-  new_domain_users           = var.domain_users_list == "" ? 0 : 1
   sysprep_filename           = "sysprep.ps1"
   setup_file                 = "C:/Temp/setup.ps1"
+  gpo_file                   = "C:/Temp/gpo.ps1"
+  gpo_folder                 = "C:/Temp/gpo"
   new_domain_admin_user_file = "C:/Temp/new_domain_admin_user.ps1"
   new_domain_users_file      = "C:/Temp/new_domain_users.ps1"
   domain_users_list_file     = "C:/Temp/domain_users_list.csv"

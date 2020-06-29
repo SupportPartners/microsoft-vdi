@@ -8,6 +8,10 @@
 # on 2019.03.22. Modified for Teradici use.
 #
 Write-Output "================================================================"
+Write-Output "Creating Production Users OU"
+Write-Output "================================================================"
+
+Write-Output "================================================================"
 Write-Output "Creating new AD Domain Users from CSV file..."
 Write-Output "================================================================"
 
@@ -43,6 +47,7 @@ foreach ($User in $ADUsers)
             -GivenName $Firstname `
             -Surname $Lastname `
             -Enabled $True `
+            -Path "OU=Production Users,DC=tera,DC=dns,DC=internal"`
             -DisplayName "$Lastname, $Firstname" `
             -AccountPassword (convertto-securestring $Password -AsPlainText -Force) -ChangePasswordAtLogon $False
 
