@@ -132,6 +132,18 @@
         "description": "Storage account of file share"
       }
     },
+    "storage_container": {
+      "type": "string",
+      "metadata": {
+        "description": "Storage container of file share"
+      }
+    },
+    "storage_access_key": {
+      "type": "string",
+      "metadata": {
+        "description": "Storage access key for access to file share"
+      }
+    },
     "TeradiciRegKey": {
       "type": "securestring",
       "metadata": { "description": "Teradici temporary Registration Key" }
@@ -183,7 +195,7 @@
   "PCoIPAgentPath": "[concat(parameters('_artifactsLocation'), variables('PCoIPAgentEXE'), parameters('_artifactsLocationSasToken'))]",
   "Sript2RunUri" :"[ uri(parameters('_artifactsLocation'),concat(variables('Script2Run'), parameters('_artifactsLocationSasToken')))]",
 
-  "ScriptParams":  "[concat(' ', parameters('TeradiciRegKey'),' ' ,variables('PCoIPAgentPath') ,' ', variables('PCoIPAgentEXE'),' ', variables('WallPaperPath'),' ', parameters('domain_name'),' ', parameters('ad_service_account_username'),' ', parameters('ad_service_account_password'),' ', parameters('application_id'),' ', parameters('tenant_id'),' ', parameters('aad_client_secret'),' ', parameters('pcoip_secret_id'), ' ', parameters('ad_pass_secret_id'))]",
+  "ScriptParams":  "[concat(' ', parameters('TeradiciRegKey'),' ' ,variables('PCoIPAgentPath') ,' ', variables('PCoIPAgentEXE'),' ', variables('WallPaperPath'),' ', parameters('domain_name'),' ', parameters('ad_service_account_username'),' ', parameters('ad_service_account_password'),' ', parameters('application_id'),' ', parameters('tenant_id'),' ', parameters('aad_client_secret'),' ', parameters('pcoip_secret_id'), ' ', parameters('ad_pass_secret_id'), ' ', parameters('storage_account'), ' ', parameters('storage_container'), ' ', parameters('storage_access_key'))]",
   "cmdToExecute":  "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ',variables('Script2Run'),  variables('ScriptParams'))]"
 },
 "resources": [
