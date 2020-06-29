@@ -146,3 +146,5 @@ variable "_artifactsLocationSasToken" {
 variable "tags" {
   description = "Common tags for storage resource"
 }
+
+variable "vm_depends_on" {}

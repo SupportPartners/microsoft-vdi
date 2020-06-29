@@ -34,6 +34,7 @@ resource "azurerm_template_deployment" "windows" {
     "_artifactsLocationSasToken"  = "${var._artifactsLocationSasToken}"
   }
   deployment_mode = "Incremental"
+  depends_on      = [var.vm_depends_on]
 }
 
 resource "azurerm_template_deployment" "shutdown_schedule_template" {

@@ -411,6 +411,7 @@ module "persona-1" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
+  vm_depends_on               = module.active-directory-domain.domain_users_created
 }
 
 module "persona-2" {
@@ -444,6 +445,7 @@ module "persona-2" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
+  vm_depends_on               = module.active-directory-domain.domain_users_created
 }
 
 module "persona-3" {
@@ -477,4 +479,5 @@ module "persona-3" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
+  vm_depends_on               = module.active-directory-domain.domain_users_created
 }
