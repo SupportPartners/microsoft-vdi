@@ -118,8 +118,6 @@ resource "null_resource" "upload-scripts" {
 }
 
 resource "null_resource" "upload-domain-users-list" {
-  count = local.new_domain_users
-
   depends_on = [azurerm_virtual_machine_extension.run-sysprep-script]
   triggers = {
     instance_id = azurerm_windows_virtual_machine.domain-controller.id
@@ -180,8 +178,6 @@ resource "null_resource" "wait-for-reboot" {
 }
 
 resource "null_resource" "new-domain-user" {
-  count = local.new_domain_users
-
   # Waits for new-domain-admin-user because that script waits for ADWS to be up
   depends_on = [null_resource.upload-domain-users-list]
 
