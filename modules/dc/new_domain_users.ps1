@@ -11,16 +11,6 @@ Write-Output "================================================================"
 Write-Output "Creating Production Users OU"
 Write-Output "================================================================"
 
-try 
-{
-    Get-ADOrganizationalUnit -Identity 'OU=Production Users,DC=tera,DC=dns,DC=internal'
-}
-catch [Microsoft.ActiveDirectory.Management.ADIdentityNotFoundException] 
-{
-    New-ADOrganizationalUnit -Name "Production Users" -Path "DC=tera,DC=dns,DC=internal"
-}
-
-
 Write-Output "================================================================"
 Write-Output "Creating new AD Domain Users from CSV file..."
 Write-Output "================================================================"
