@@ -252,7 +252,7 @@ try {
     Join-Domain $domain_name $ad_service_account_username $ad_service_account_password
 
     #Mount file sharing storage container
-    Mount-Disk $storage_name $container $storage_password
+    Mount-Disk $storage_account $storage_container $storage_access_key
 
     #Decrypt Teradici Reg Key and AD Service Account Password
     if (!($application_id -eq $null -or $application_id -eq "") -and !($aad_client_secret -eq $null -or $aad_client_secret -eq "") -and !($tenant_id -eq $null -or $tenant_id -eq "")) {
