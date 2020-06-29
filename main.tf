@@ -380,37 +380,6 @@ module "cac" {
   _artifactsLocation          = var._artifactsLocation
 }
 
-# module "windows-std" {
-#   source = "./modules/windows-std"
-
-#   resource_group_name = azurerm_resource_group.vdi_resource_group.name
-#   azure_region        = azurerm_resource_group.vdi_resource_group.location
-
-#   base_name                   = var.base_name
-#   image_id                    = var.golden_image_id
-#   pcoip_registration_code     = var.pcoip_registration_code
-#   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
-#   ad_service_account_username = var.ad_admin_username
-#   ad_service_account_password = var.ad_admin_password
-#   admin_name                  = var.windows_std_admin_username
-#   admin_password              = var.windows_std_admin_password
-#   name                        = var.windows_std_hostname
-#   instance_count              = var.windows_std_count
-#   pcoip_agent_location        = var.pcoip_agent_location
-#   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
-#   nsgID                       = azurerm_network_security_group.nsg.id
-#   subnetID                    = azurerm_subnet.workstation.id
-#   subnet_name                 = azurerm_subnet.workstation.name
-#   vm_size                     = var.windows_std_vm_size
-#   application_id              = var.application_id
-#   aad_client_secret           = var.aad_client_secret
-#   tenant_id                   = var.tenant_id
-#   pcoip_secret_id             = var.pcoip_secret_id
-#   ad_pass_secret_id           = var.ad_pass_secret_id
-#   _artifactsLocation          = var._artifactsLocation
-#   _artifactsLocationSasToken  = var._artifactsLocationSasToken
-# }
-
 module "persona-1" {
   source = "./modules/persona"
 
