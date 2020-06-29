@@ -45,18 +45,6 @@ variable "pcoip_agent_location" {
   default     = "https://downloads.teradici.com/win/stable/"
 }
 
-variable "storage_account" {
-  description = "File share storage account"
-}
-
-variable "storage_container" {
-  description = "File share storage account"
-}
-
-variable "storage_access_key" {
-  description = "File share storage account"
-}
-
 variable "pcoip_registration_code" {
   description = "PCoIP Registration code from Teradici"
   type        = string

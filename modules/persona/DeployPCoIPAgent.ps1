@@ -173,7 +173,7 @@ function Join-Domain
         Try {
             $Retry = $false
             # Don't do -Restart here because there is no log showing the restart
-            Add-Computer -DomainName "$domain_name" -Credential $cred -Verbose -Force -ErrorAction Stop
+            Add-Computer -DomainName "$domain_name" -Credential $cred -Verbose -Force -ErrorAction Stop -Path "OU=Workstations,DC=tera,DC=dns,DC=internal"
         }
 
         # The same Error, System.InvalidOperationException, is thrown in these cases: 
@@ -227,6 +227,11 @@ function DownloadFileOverHttp($Url, $DestinationPath) {
 try {
     #Change empty disk letter to Y
     Get-Partition -DriveLetter E | Set-Partition -NewDriveLetter Y
+    Write-Output "Disk E is renamed to Y"
+
+    #Join Domain Controller
+    Write-Output "Joining Domain"
+    Join-Domain $domain_name $ad_service_account_username $ad_service_account_password
 
     #Decrypt Teradici Reg Key and AD Service Account Password
     if (!($application_id -eq $null -or $application_id -eq "") -and !($aad_client_secret -eq $null -or $aad_client_secret -eq "") -and !($tenant_id -eq $null -or $tenant_id -eq "")) {
@@ -235,11 +240,6 @@ try {
     $ad_service_account_password = Get-Secret $application_id $aad_client_secret $tenant_id $ad_pass_secret_id
     }
 
-    #Join Domain Controller
-    Write-Output "Joining Domain"
-    Join-Domain $domain_name $ad_service_account_username $ad_service_account_password
-
-    
     #Set the Agent's destination 
     If(!(test-path $AgentDestinationPath))  {
         New-Item -ItemType Directory -Force -Path $AgentDestinationPath
