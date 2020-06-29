@@ -168,6 +168,11 @@ variable "windows_std_admin_password" {
   type        = string
 }
 
+variable "windows_std_vm_size" {
+  description = "Size of the VM to deploy"
+  type        = string
+}
+
 variable "windows_std_persona" {
   description = "Persona type of deploying VM"
 }
