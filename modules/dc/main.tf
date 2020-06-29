@@ -183,7 +183,7 @@ resource "null_resource" "run-setup-script" {
 
 
 resource "null_resource" "run-gpo-script" {
-  depends_on = [null_resource.upload-scripts]
+  depends_on = [null_resource.upload-scripts, azurerm_virtual_machine_extension.run-sysprep-script]
   triggers = {
     instance_id = azurerm_windows_virtual_machine.domain-controller.id
   }
