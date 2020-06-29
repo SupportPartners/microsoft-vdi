@@ -1,24 +1,9 @@
-# Copyright (c) 2018 Teradici Corporation
+# Copyright (c) 2019 Teradici Corporation
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
 
+# Make sure this file has Windows line endings
 <#
     .SYNOPSIS
         Configure Windows 10 Workstation with Teradici PCoIP.
@@ -176,7 +161,7 @@ function Join-Domain
         Try {
             $Retry = $false
             # Don't do -Restart here because there is no log showing the restart
-            Add-Computer -DomainName "$domain_name" -Credential $cred -Verbose -Force -ErrorAction Stop
+            Add-Computer -DomainName "$domain_name" -Credential $cred -Verbose -Force -ErrorAction Stop -Path "OU=Workstations,DC=tera,DC=dns,DC=internal"
         }
 
         # The same Error, System.InvalidOperationException, is thrown in these cases: 
@@ -228,7 +213,14 @@ function DownloadFileOverHttp($Url, $DestinationPath) {
 }
 
 try {
-    
+    #Change empty disk letter to Y
+    Get-Partition -DriveLetter E | Set-Partition -NewDriveLetter Y
+    Write-Output "Disk E is renamed to Y"
+
+    #Join Domain Controller
+    Write-Output "Joining Domain"
+    Join-Domain $domain_name $ad_service_account_username $ad_service_account_password
+
     #Decrypt Teradici Reg Key and AD Service Account Password
     if (!($application_id -eq $null -or $application_id -eq "") -and !($aad_client_secret -eq $null -or $aad_client_secret -eq "") -and !($tenant_id -eq $null -or $tenant_id -eq "")) {
     Write-Output "Running Get-Secret!"
@@ -236,11 +228,6 @@ try {
     $ad_service_account_password = Get-Secret $application_id $aad_client_secret $tenant_id $ad_pass_secret_id
     }
 
-    #Join Domain Controller
-    Write-Output "Joining Domain"
-    Join-Domain $domain_name $ad_service_account_username $ad_service_account_password
-
-    
     #Set the Agent's destination 
     If(!(test-path $AgentDestinationPath))  {
         New-Item -ItemType Directory -Force -Path $AgentDestinationPath

@@ -398,9 +398,6 @@ module "persona-1" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 1 ? var.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
-  storage_account             = module.storage.storage_account
-  storage_container           = module.storage.storage_container
-  storage_access_key          = module.storage.storage_access_key
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
@@ -414,6 +411,7 @@ module "persona-1" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
+  vm_depends_on               = module.active-directory-domain.domain_users_created
 }
 
 module "persona-2" {
@@ -434,9 +432,6 @@ module "persona-2" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 2 ? var.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
-  storage_account             = module.storage.storage_account
-  storage_container           = module.storage.storage_container
-  storage_access_key          = module.storage.storage_access_key
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
@@ -450,6 +445,7 @@ module "persona-2" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
+  vm_depends_on               = module.active-directory-domain.domain_users_created
 }
 
 module "persona-3" {
@@ -470,9 +466,6 @@ module "persona-3" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 3 ? var.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
-  storage_account             = module.storage.storage_account
-  storage_container           = module.storage.storage_container
-  storage_access_key          = module.storage.storage_access_key
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
@@ -486,4 +479,5 @@ module "persona-3" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
+  vm_depends_on               = module.active-directory-domain.domain_users_created
 }
