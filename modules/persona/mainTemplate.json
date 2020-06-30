@@ -144,6 +144,12 @@
         "description": "Storage access key for access to file share"
       }
     },
+    "diagnostic_storage_url": {
+      "type": "string",
+      "metadata": {
+        "description": "Diagnostic storage url"
+      }
+    },
     "TeradiciRegKey": {
       "type": "securestring",
       "metadata": { "description": "Teradici temporary Registration Key" }
@@ -271,6 +277,12 @@
             "id": "[variables('nicId')]"
           }
         ]
+      },
+      "diagnosticsProfile": {
+        "bootDiagnostics": {
+          "enabled": true,
+          "storageUri": "[parameters('diagnostic_storage_url')]"
+        }
       }
     }
   },

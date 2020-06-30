@@ -57,6 +57,10 @@ variable "storage_access_key" {
   description = "File share storage account"
 }
 
+variable "diagnostic_storage_url" {
+  description = "Diagnostic storage url"
+}
+
 variable "pcoip_registration_code" {
   description = "PCoIP Registration code from Teradici"
   type        = string

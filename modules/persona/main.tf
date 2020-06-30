@@ -32,6 +32,7 @@ resource "azurerm_template_deployment" "windows" {
     "storage_account"             = "${var.storage_account}"
     "storage_container"           = "${var.storage_container}"
     "storage_access_key"          = "${var.storage_access_key}"
+    "diagnostic_storage_url"      = "${var.diagnostic_storage_url}"
     "TeradiciRegKey"              = "${var.pcoip_registration_code}"
     "_artifactsLocation"          = "${var._artifactsLocation}"
     "_artifactsLocationSasToken"  = "${var._artifactsLocationSasToken}"

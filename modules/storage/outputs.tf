@@ -9,3 +9,7 @@ output "storage_container" {
 output "storage_access_key" {
   value = local.storage[0].primary_access_key
 }
+
+output "diag_storage_blob_endpoint" {
+  value = local.storage[0].primary_blob_endpoint
+}

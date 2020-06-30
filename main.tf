@@ -400,6 +400,7 @@ module "persona-1" {
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
+  diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
@@ -437,6 +438,7 @@ module "persona-2" {
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
+  diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
@@ -474,6 +476,7 @@ module "persona-3" {
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
+  diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
