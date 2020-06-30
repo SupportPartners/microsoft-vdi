@@ -224,6 +224,9 @@ resource "null_resource" "run-gpo-script" {
   provisioner "remote-exec" {
     inline = [
       "powershell -file ${local.gpo_file}",
+      "powershell -file ${local.new_domain_users_file}",
+      "del ${replace(local.new_domain_users_file, "/", "\\")}",
+      "del ${replace(local.domain_users_list_file, "/", "\\")}",
       "del ${replace(local.gpo_file, "/", "\\")}",
       "del ${replace(local.gpo_archive, "/", "\\")}",
       "rd /S /Q ${replace(local.gpo_folder, "/", "\\")}"
@@ -242,36 +245,7 @@ resource "null_resource" "wait-for-reboot" {
     # This command is written this way to make it work regardless of whether the
     # user runs Terraform in Windows (where local-exec is the command prompt) or
     # Linux (where the local-exec is e.g. bash shell).
-    command = "sleep 240 || powershell sleep 240"
-  }
-}
-
-resource "null_resource" "new-domain-user" {
-  # Waits for new-domain-admin-user because that script waits for ADWS to be up
-  depends_on = [null_resource.upload-domain-users-list, null_resource.run-gpo-script]
-
-  triggers = {
-    instance_id = azurerm_windows_virtual_machine.domain-controller.id
-  }
-
-  connection {
-    type     = "winrm"
-    user     = var.ad_admin_username
-    password = local.use_secret_or_not.ad_admin_password
-    host     = azurerm_windows_virtual_machine.domain-controller.public_ip_address
-    port     = "5986"
-    https    = true
-    insecure = true
-  }
-
-  provisioner "remote-exec" {
-    # wait in case csv file is newly uploaded
-    inline = [
-      "powershell sleep 2",
-      "powershell -file ${local.new_domain_users_file}",
-      "del ${replace(local.new_domain_users_file, "/", "\\")}",
-      "del ${replace(local.domain_users_list_file, "/", "\\")}"
-    ]
+    command = "sleep 600 || powershell sleep 600"
   }
 }
 
