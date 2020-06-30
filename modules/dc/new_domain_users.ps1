@@ -26,7 +26,7 @@ Function Create-OU
     }
 }
 
-Create-OU "Productions users"
+Create-OU "Production users"
 Create-OU "Workstations"
 
 Start-Sleep -s 30
