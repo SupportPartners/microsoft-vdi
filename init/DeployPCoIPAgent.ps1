@@ -191,7 +191,7 @@ function Join-Domain
         Try {
             $Retry = $false
             # Don't do -Restart here because there is no log showing the restart
-            Add-Computer -DomainName "$domain_name" -Credential $cred -Verbose -Force -ErrorAction Stop -Path "OU=Workstations,DC=tera,DC=dns,DC=internal"
+            Add-Computer -DomainName "$domain_name" -Credential $cred -Verbose -Force -ErrorAction Stop -OUPath "OU=Workstations,DC=tera,DC=dns,DC=internal"
         }
 
         # The same Error, System.InvalidOperationException, is thrown in these cases: 
