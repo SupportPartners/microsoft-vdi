@@ -124,15 +124,15 @@ resource "null_resource" "upload-scripts" {
     destination = local.new_domain_users_file
   }
 
-  # provisioner "file" {
-  #   content     = data.template_file.gpo-script.rendered
-  #   destination = local.gpo_file
-  # }
+  provisioner "file" {
+    content     = data.template_file.gpo-script.rendered
+    destination = local.gpo_file
+  }
 
-  # provisioner "file" {
-  #   source      = "${path.module}/files/gpo"
-  #   destination = local.gpo_folder
-  # }
+  provisioner "file" {
+    source      = "${path.module}/files/gpo"
+    destination = local.gpo_folder
+  }
 }
 
 resource "null_resource" "upload-domain-users-list" {
