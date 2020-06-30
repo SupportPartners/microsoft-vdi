@@ -129,10 +129,10 @@ resource "null_resource" "upload-scripts" {
     destination = local.gpo_file
   }
 
-  provisioner "file" {
-    source      = "${path.module}/files/gpo"
-    destination = local.gpo_folder
-  }
+  # provisioner "file" {
+  #   source      = "${path.module}/files/gpo/"
+  #   destination = local.gpo_folder
+  # }
 }
 
 resource "null_resource" "upload-domain-users-list" {
