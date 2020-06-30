@@ -379,6 +379,7 @@ module "cac" {
   ad_pass_secret_id           = var.ad_pass_secret_id
   cac_token_secret_id         = var.cac_token_secret_id
   _artifactsLocation          = var._artifactsLocation
+  vm_depends_on               = module.active-directory-domain.domain_users_created
 }
 
 module "persona-1" {
