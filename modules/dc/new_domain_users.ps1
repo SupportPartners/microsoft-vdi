@@ -29,6 +29,8 @@ Function Create-OU
 Create-OU "Productions users"
 Create-OU "Workstations"
 
+Start-Sleep -s 30
+
 Write-Output "================================================================"
 Write-Output "Creating new AD Domain Users from CSV file..."
 Write-Output "================================================================"
