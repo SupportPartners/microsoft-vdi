@@ -39,7 +39,8 @@ data "template_file" "gpo-script" {
   template = file("${path.module}/gpo.ps1")
 
   vars = {
-    gpo_backups_path    = local.gpo_folder
+    gpo_backups_path            = local.gpo_folder
+    gpo_backups_archive_path    = local.gpo_archive
   }
 }
 
@@ -123,16 +124,39 @@ resource "null_resource" "upload-scripts" {
     content     = data.template_file.new-domain-users-script.rendered
     destination = local.new_domain_users_file
   }
+}
+
+resource "null_resource" "upload-gpo" {
+  depends_on = [null_resource.upload-scripts]
+
+  triggers = {
+    instance_id = azurerm_windows_virtual_machine.domain-controller.id
+  }
+
+  connection {
+    type     = "winrm"
+    user     = var.ad_admin_username
+    password = local.use_secret_or_not.ad_admin_password
+    host     = azurerm_windows_virtual_machine.domain-controller.public_ip_address
+    port     = "5986"
+    https    = true
+    insecure = true
+  }
+
+  provisioner "local-exec" {
+    command = "Get-ChildItem -Path ${path.module}/files/gpo | Compress-Archive -DestinationPath ${path.module}/gpo.zip -Force"
+    interpreter = ["PowerShell", "-Command"]
+  }
 
   provisioner "file" {
     content     = data.template_file.gpo-script.rendered
     destination = local.gpo_file
   }
 
-  # provisioner "file" {
-  #   source      = "${path.module}/files/gpo/"
-  #   destination = local.gpo_folder
-  # }
+  provisioner "file" {
+    source      = "${path.module}/gpo.zip"
+    destination = local.gpo_archive
+  }
 }
 
 resource "null_resource" "upload-domain-users-list" {
@@ -181,31 +205,31 @@ resource "null_resource" "run-setup-script" {
   }
 }
 
+resource "null_resource" "run-gpo-script" {
+  depends_on = [null_resource.upload-gpo, null_resource.wait-for-reboot]
+  triggers = {
+    instance_id = azurerm_windows_virtual_machine.domain-controller.id
+  }
 
-# resource "null_resource" "run-gpo-script" {
-#   depends_on = [null_resource.upload-scripts, azurerm_virtual_machine_extension.run-sysprep-script]
-#   triggers = {
-#     instance_id = azurerm_windows_virtual_machine.domain-controller.id
-#   }
+  connection {
+    type     = "winrm"
+    user     = var.ad_admin_username
+    password = local.use_secret_or_not.ad_admin_password
+    host     = azurerm_windows_virtual_machine.domain-controller.public_ip_address
+    port     = "5986"
+    https    = true
+    insecure = true
+  }
 
-#   connection {
-#     type     = "winrm"
-#     user     = var.ad_admin_username
-#     password = local.use_secret_or_not.ad_admin_password
-#     host     = azurerm_windows_virtual_machine.domain-controller.public_ip_address
-#     port     = "5986"
-#     https    = true
-#     insecure = true
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#       "powershell -file ${local.gpo_file}",
-#       "del ${replace(local.gpo_file, "/", "\\")}",
-#       "rm -r ${replace(local.gpo_folder, "/", "\\")}"
-#     ]
-#   }
-# }
+  provisioner "remote-exec" {
+    inline = [
+      "powershell -file ${local.gpo_file}",
+      "del ${replace(local.gpo_file, "/", "\\")}",
+      "del ${replace(local.gpo_archive, "/", "\\")}",
+      "rd /S /Q ${replace(local.gpo_folder, "/", "\\")}"
+    ]
+  }
+}
 
 
 resource "null_resource" "wait-for-reboot" {
@@ -218,13 +242,13 @@ resource "null_resource" "wait-for-reboot" {
     # This command is written this way to make it work regardless of whether the
     # user runs Terraform in Windows (where local-exec is the command prompt) or
     # Linux (where the local-exec is e.g. bash shell).
-    command = "sleep 15 || powershell sleep 15"
+    command = "sleep 240 || powershell sleep 240"
   }
 }
 
 resource "null_resource" "new-domain-user" {
   # Waits for new-domain-admin-user because that script waits for ADWS to be up
-  depends_on = [null_resource.upload-domain-users-list]
+  depends_on = [null_resource.upload-domain-users-list, null_resource.run-gpo-script]
 
   triggers = {
     instance_id = azurerm_windows_virtual_machine.domain-controller.id

@@ -1,6 +1,8 @@
-$path = ${gpo_backups_path}
+$path = "${gpo_backups_path}"
+$archivePath = "${gpo_backups_archive_path}"
+
 $gpo = @{
-	"users" = "Productions users"
+	"users" = "Production Users"
 	"workstations" = "Workstations"
 }
 
@@ -62,6 +64,8 @@ Function Create-AD-GPO-For
         Create-AD-GPO $policy.FullName $target
     }
 }
+
+Expand-Archive -Path $archivePath -DestinationPath $path
 
 ForEach ($key in $gpo.Keys)
 {

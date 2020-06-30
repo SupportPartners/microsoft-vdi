@@ -98,6 +98,7 @@ locals {
   setup_file                 = "C:/Temp/setup.ps1"
   gpo_file                   = "C:/Temp/gpo.ps1"
   gpo_folder                 = "C:/Temp/gpo"
+  gpo_archive                = "C:/Temp/gpo.zip"
   new_domain_admin_user_file = "C:/Temp/new_domain_admin_user.ps1"
   new_domain_users_file      = "C:/Temp/new_domain_users.ps1"
   domain_users_list_file     = "C:/Temp/domain_users_list.csv"
