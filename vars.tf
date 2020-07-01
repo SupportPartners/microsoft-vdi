@@ -39,7 +39,6 @@ variable "diag_storage_name" {
 }
 
 variable "file_share_quota" {
-  default = 5120
   description = "Provisioned capacity of file share in GiB. Possible values 100-102400. Default is 5120 Gib"
 }
 
@@ -160,11 +159,6 @@ variable "windows_std_admin_username" {
 
 variable "windows_std_admin_password" {
   description = "Password for the Administrator of the Workstation"
-  type        = string
-}
-
-variable "windows_std_vm_size" {
-  description = "Size of the VM to deploy"
   type        = string
 }
 
