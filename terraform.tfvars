@@ -38,26 +38,26 @@ ssl_key  = ""
 ssl_cert = ""
 
 # User input variables
-subscription_id = ""
-client_id       = ""
-client_secret   = ""
-sp_tenant_id    = ""
+# subscription_id = ""
+# client_id       = ""
+# client_secret   = ""
+# sp_tenant_id    = ""
 
-deployment_index         = "001"
-location                 = ""
-storage_name             = ""
-diag_storage_name        = ""
+# deployment_index         = "001"
+# location                 = ""
+# storage_name             = ""
+# diag_storage_name        = ""
 file_share_quota         = 2048
-pcoip_registration_code  = ""
-ad_admin_username        = ""
-ad_admin_password        = ""
-safe_mode_admin_password = ""
+# pcoip_registration_code  = ""
+# ad_admin_username        = ""
+# ad_admin_password        = ""
+# safe_mode_admin_password = ""
 
-cac_admin_username          = ""
-cac_admin_password          = ""
-windows_std_admin_username  = ""
-windows_std_admin_password  = ""
+# cac_admin_username          = ""
+# cac_admin_password          = ""
+# windows_std_admin_username  = ""
+# windows_std_admin_password  = ""
 windows_std_hostname        = "windows-std-workstation"
 windows_std_persona         = 1
-windows_std_count           = 1
+# windows_std_count           = 1
 windows_std_vm_size         = "Standard_B2ms"
