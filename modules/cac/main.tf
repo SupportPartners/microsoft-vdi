@@ -6,7 +6,7 @@
  */
 
 resource "azurerm_virtual_machine" "cac" {
-  depends_on = [var.dns_zone_id]
+  depends_on = [var.dns_zone_id, var.vm_depends_on]
 
   name                  = var.virtual_machine_name
   location              = var.location

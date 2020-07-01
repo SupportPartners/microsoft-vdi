@@ -249,7 +249,7 @@ locals {
   dc_virtual_machine_name  = "vm-vdi-dc${var.deployment_index}"
   cac_virtual_machine_name = "vm-vdi-cac${var.deployment_index}"
   common_tags              = "${map(
-    "Created Date", "${formatdate("MMM DD, YYYY", timestamp())}",
+    "Created Date", "${formatdate("MMM DD, YYYY", time_static.date_creation.id)}",
     "Environment", "${var.environment}",
     "Client Name", "${var.client_name}",
     "Createdby", "Supportpartners"

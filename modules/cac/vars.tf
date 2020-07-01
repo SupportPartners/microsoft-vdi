@@ -178,3 +178,5 @@ locals {
     _artifactsLocation          = var._artifactsLocation
   })
 }
+
+variable "vm_depends_on" {}

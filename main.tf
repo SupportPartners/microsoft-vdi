@@ -1,3 +1,5 @@
+resource "time_static" "date_creation" {}
+
 resource "azurerm_resource_group" "vdi_resource_group" {
   location = var.location
   name     = var.resource_group_name != "" ? var.resource_group_name : "rg-${var.base_name}-infra-${var.deployment_index}"
@@ -377,6 +379,7 @@ module "cac" {
   ad_pass_secret_id           = var.ad_pass_secret_id
   cac_token_secret_id         = var.cac_token_secret_id
   _artifactsLocation          = var._artifactsLocation
+  vm_depends_on               = module.active-directory-domain.domain_users_created
 }
 
 module "persona-1" {
@@ -400,6 +403,7 @@ module "persona-1" {
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
+  diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
@@ -437,6 +441,7 @@ module "persona-2" {
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
+  diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
@@ -474,6 +479,7 @@ module "persona-3" {
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
+  diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
   vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
   nsgID                       = azurerm_network_security_group.nsg.id
   subnetID                    = azurerm_subnet.workstation.id
