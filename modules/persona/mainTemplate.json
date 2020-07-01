@@ -169,12 +169,7 @@
         "defaultValue": ""
     },
     "vmTags": {
-      "type": "object",
-      "defaultValue": {
-        "Type": "workstation",
-        "OS": "Windows10",
-        "Build": "1909"
-      }
+      "type": "string"
     }
 },
  
@@ -242,7 +237,7 @@
     "name": "[variables('vmName')]",
     "apiVersion": "2019-03-01",
     "location": "[variables('location')]",
-    "tags": "[parameters('vmTags')]",
+    "tags": "[base64ToJson(base64(parameters('vmTags')))]",
     "dependsOn": [
       "[variables('nicId')]"
     ],
