@@ -342,6 +342,11 @@ module "active-directory-domain" {
   safe_admin_pass_secret_id     = var.safe_admin_pass_secret_id
   safe_mode_admin_password      = var.safe_mode_admin_password
   _artifactsLocation            = var._artifactsLocation
+
+  fs_stroage_account            = module.storage.storage_account
+  fs_stroage_container          = module.storage.storage_container
+  fs_stroage_password           = module.storage.storage_access_key
+  fs_dependancy                 = module.storage.storage_created
 }
 
 module "cac" {

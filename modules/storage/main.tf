@@ -1,11 +1,10 @@
-resource "azurerm_storage_account" "standard-storage-account" {
+resource "azurerm_storage_account" "storage-account" {
   name                     = "ss${var.storage_name}${var.deployment_index}"
-  count                    = var.is_premium_storage == true ? 0 : 1
   resource_group_name      = var.resource_group_name
   location                 = var.location
-  account_tier             = "Standard"
+  account_tier             = var.is_premium_storage == true ? "Premium": "Standard"
   account_replication_type = "LRS"
-  account_kind             = "StorageV2"
+  account_kind             = var.is_premium_storage == true ? "FileStorage" : "StorageV2"
   access_tier              = "Hot"
   tags                     = "${merge(
     var.tags,
@@ -13,27 +12,9 @@ resource "azurerm_storage_account" "standard-storage-account" {
   )}"
 }
 
-resource "azurerm_storage_account" "premium-storage-account" {
-  name                     = "ss${var.storage_name}${var.deployment_index}"
-  count                    = var.is_premium_storage == true ? 1 : 0
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Premium"
-  account_replication_type = "LRS"
-  account_kind             = "FileStorage"
-  tags                     = "${merge(
-    var.tags,
-    map("Type", "Storage")
-  )}"
-}
-
-locals {
-  storage = var.is_premium_storage ? azurerm_storage_account.premium-storage-account : azurerm_storage_account.standard-storage-account
-}
-
 resource "azurerm_storage_share" "file-share" {
   name                 = "DemoFileShare"
-  storage_account_name = local.storage[0].name
+  storage_account_name =  azurerm_storage_account.storage-account.name
 
   quota = var.file_share_quota
 }

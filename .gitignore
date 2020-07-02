@@ -32,3 +32,4 @@ override.tf.json
 .terraformrc
 terraform.rc
 *.zip
+/modules/dc/files/gpo/users/SOE - Azure File Share/{6C84A158-775A-4E11-8D4D-B3BDEE20D9C0}/DomainSysvol/GPO/User/Scripts/Logon/AzureFileShareMap.ps1
