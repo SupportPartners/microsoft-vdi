@@ -39,7 +39,7 @@ resource "azurerm_template_deployment" "windows" {
     "vmTags"                      = "${jsonencode(merge(var.tags, map(
         "Type", "workstation",
         "OS", "Windows10",
-        "Build", "1909"
+        "Build", "2004"
     )))}"
   }
   deployment_mode = "Incremental"

@@ -32,7 +32,7 @@ locals {
 }
 
 resource "azurerm_storage_share" "file-share" {
-  name                 = "file-share"
+  name                 = "DemoFileShare"
   storage_account_name = local.storage[0].name
 
   quota = var.file_share_quota
