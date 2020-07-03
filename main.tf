@@ -342,6 +342,11 @@ module "active-directory-domain" {
   safe_admin_pass_secret_id     = var.safe_admin_pass_secret_id
   safe_mode_admin_password      = var.safe_mode_admin_password
   _artifactsLocation            = var._artifactsLocation
+
+  fs_stroage_account            = module.storage.storage_account
+  fs_stroage_container          = module.storage.storage_container
+  fs_stroage_password           = module.storage.storage_access_key
+  fs_dependancy                 = module.storage.storage_created
 }
 
 module "cac" {
@@ -388,7 +393,7 @@ module "persona-1" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "Win10Nv6SSD"
+  vm_name                     = "vmWin10Nv6-${var.deployment_index}"
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -426,7 +431,7 @@ module "persona-2" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "Win10Nv12SSD"
+  vm_name                     = "vmWin10Nv12-${var.deployment_index}"
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -464,7 +469,7 @@ module "persona-3" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "Win10Nv24SSD"
+  vm_name                     = "vmWin10Nv24-${var.deployment_index}"
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code

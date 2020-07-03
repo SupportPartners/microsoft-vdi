@@ -86,6 +86,21 @@ variable "_artifactsLocation" {
   default     = ""
 }
 
+variable "fs_stroage_account" {
+  type        = string
+}
+
+variable "fs_stroage_container" {
+  type        = string
+}
+
+variable "fs_stroage_password" {
+  type        = string
+}
+
+variable "fs_dependancy" {
+}
+
 locals {
   use_secret_or_not    = var.ad_admin_password != "" ? { ad_admin_password = var.ad_admin_password } : { ad_admin_password = tostring(data.azurerm_key_vault_secret.ad-pass[0].value) }
   virtual_machine_fqdn = join(".", [var.virtual_machine_name, var.active_directory_domain_name])

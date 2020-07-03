@@ -44,6 +44,21 @@ data "template_file" "gpo-script" {
   }
 }
 
+data "template_file" "gpo-templates" {
+  for_each                 = fileset(path.module, "/files/gpo/**/*.template")
+  depends_on               = [var.fs_dependancy]
+
+  template                 = file("${path.module}/${each.key}")
+  vars = {
+    tf_file_path           = abspath("${path.module}/${each.key}")
+
+    fs_storage_name        = var.fs_stroage_account
+    fs_container_name      = var.fs_stroage_container
+    fs_account_name        = var.fs_stroage_account
+    fs_storage_password    = var.fs_stroage_password
+  }
+}
+
 resource "azurerm_windows_virtual_machine" "domain-controller" {
   name                = var.virtual_machine_name
   resource_group_name = var.resource_group_name
@@ -126,8 +141,15 @@ resource "null_resource" "upload-scripts" {
   }
 }
 
+resource "local_file" "gpo-templates-process" {
+    for_each    = data.template_file.gpo-templates
+
+    content     = each.value.rendered
+    filename    = replace(each.value.vars.tf_file_path, ".template", "")
+}
+
 resource "null_resource" "upload-gpo" {
-  depends_on = [null_resource.upload-scripts]
+  depends_on = [null_resource.upload-scripts, local_file.gpo-templates-process]
 
   triggers = {
     instance_id = azurerm_windows_virtual_machine.domain-controller.id
