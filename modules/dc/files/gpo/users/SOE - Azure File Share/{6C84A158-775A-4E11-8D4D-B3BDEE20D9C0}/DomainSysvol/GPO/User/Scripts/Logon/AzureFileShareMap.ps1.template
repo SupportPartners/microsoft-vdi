@@ -3,7 +3,7 @@ $container = "${fs_container_name}"
 $account_name = "${fs_account_name}"
 $storage_password = "${fs_storage_password}"
 ​
-$connectTestResult = Test-NetConnection -ComputerName $storage_name.file.core.windows.net -Port 445
+$connectTestResult = Test-NetConnection -ComputerName "$storage_name.file.core.windows.net" -Port 445
 if ($connectTestResult.TcpTestSucceeded) {
     # Save the password so the drive will persist on reboot
     cmd.exe /C "cmdkey /add:$storage_name.file.core.windows.net /user:Azure\$account_name /pass:$storage_password"
