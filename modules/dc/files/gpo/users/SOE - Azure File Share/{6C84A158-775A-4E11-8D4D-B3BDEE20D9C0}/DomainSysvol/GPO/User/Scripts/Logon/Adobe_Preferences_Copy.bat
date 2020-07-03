@@ -1,0 +1,1 @@
+robocopy "Z:\03_SP Systems\Project_Folders_Template\Profile-template\Profile-template" "C:\Users\%username%\Documents\Adobe\Premiere Pro\14.0\Profile-%username%" /E /XC /XN /XO /R:1 /W:1
