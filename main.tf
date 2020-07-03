@@ -14,7 +14,7 @@ module "storage" {
   storage_name        = var.storage_name
   is_premium_storage  = var.windows_std_persona > 1
   diag_storage_name   = var.diag_storage_name
-  file_share_quota    = var.file_share_quota
+  file_share_quota    = var.file_share_quota != "" ? var.file_share_quota : 5120
   tags                = local.common_tags
 }
 
