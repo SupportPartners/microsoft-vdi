@@ -13,7 +13,7 @@ resource "azurerm_storage_account" "storage-account" {
 }
 
 resource "azurerm_storage_share" "file-share" {
-  name                 = "demo-file-share"
+  name                 = "demofileshare"
   storage_account_name =  azurerm_storage_account.storage-account.name
 
   quota = var.file_share_quota
