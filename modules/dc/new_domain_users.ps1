@@ -24,7 +24,7 @@ foreach ($User in $ADUsers)
     $Password 	= $User.password
     $Firstname 	= $User.firstname
     $Lastname 	= $User.lastname
-    $Isadmin    = $User.isadmin
+    # $Isadmin    = $User.isadmin
 
     #Check to see if the user already exists in AD
     if (Get-ADUser -F {SamAccountName -eq $Username})
@@ -48,11 +48,11 @@ foreach ($User in $ADUsers)
             -DisplayName "$Lastname, $Firstname" `
             -AccountPassword (convertto-securestring $Password -AsPlainText -Force) -ChangePasswordAtLogon $False
 
-        if ($Isadmin -eq "true")
-        {
-            Add-ADGroupMember `
-                -Identity "Domain Admins" `
-                -Members $Username
-        }
+        # if ($Isadmin -eq "true")
+        # {
+        #     Add-ADGroupMember `
+        #         -Identity "Domain Admins" `
+        #         -Members $Username
+        # }
     }
 }

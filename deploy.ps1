@@ -45,14 +45,14 @@ Function CreateUsers
             $password = Read-Host "Password"
             $firstname = Read-Host "Firstname"
             $lastname = Read-Host "Lastname"
-            $isadmin =  Read-Host "Is admin? true/false"
+            # $isadmin =  Read-Host "Is admin? true/false"
     
             $users += [pscustomobject]@{
                 username = $username
                 password = $password
                 firstname = $firstname
                 lastname = $lastname
-                isadmin = $isadmin
+                # isadmin = $isadmin
             }
         }
         Until ($isUserAdding -eq $False)
