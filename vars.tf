@@ -230,6 +230,16 @@ variable "environment" {
   type        = string
 }
 
+variable "assets_storage_account" {
+  description = "Source storage account for downloading assets to file share"
+  type        = string
+}
+
+variable "assets_storage_container" {
+  description = "Source storage container for downloading assets to file share"
+  type        = string
+}
+
 variable "_artifactsLocation" {
   description = "The base URI where artifacts required by this template are located including a trailing '/'"
 }
