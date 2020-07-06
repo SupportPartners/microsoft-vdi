@@ -393,7 +393,7 @@ module "persona-1" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv6-${var.deployment_index}"
+  vm_name                     = "vmWin10Nv6"
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -431,7 +431,7 @@ module "persona-2" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv12-${var.deployment_index}"
+  vm_name                     = "vmWin10Nv12"
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -469,7 +469,7 @@ module "persona-3" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv24-${var.deployment_index}"
+  vm_name                     = "vmWin10Nv24"
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
