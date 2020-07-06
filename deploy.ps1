@@ -1,5 +1,5 @@
-$owner = "graphuk"
-$repo_name = "sp_vdi-terraform"
+$owner = "SupportPartners"
+$repo_name = "microsoft-vdi"
 $branch = "master"
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
