@@ -96,12 +96,15 @@ Function CreateUsers
             }
         }
         Until ($isUserAdding -eq $False)
-    
+
         $users | Export-Csv -NoTypeInformation -Path ".\domain_users_list.csv"
     }
+
+    return $users.Count
 }
 
 $subscriptionId = AzureLogin
+$users_count = CreateUsers
 
 $vars =
 ""
@@ -115,8 +118,6 @@ $tfvars_file = "user-vars.tfvars"
 New-Item -Path . -Name $tfvars_file -ItemType "file" -Force -Value $vars
 
 DownloadTerraform($repo_directory)
-
-CreateUsers
 
 .\terraform.exe init
 .\terraform.exe apply -var-file="$tfvars_file"
