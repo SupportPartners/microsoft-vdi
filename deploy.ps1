@@ -5,6 +5,46 @@ $branch = "master"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $wc = New-Object System.Net.WebClient
 
+Function AzureLogin
+{
+    Try
+    {
+        $accountsNumber = (az account list | ConvertFrom-Json).Length
+    }
+    Catch [System.Management.Automation.CommandNotFoundException]
+    {
+        Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi
+    }
+
+    If ($accountsNumber -le 1) {
+        az login
+    }
+
+    $accounts = az account list --query "[].{Name: name, Id: id}" | ConvertFrom-Json
+    $accounts | Foreach-Object { $index = 1 } {Add-Member -InputObject $_ -MemberType NoteProperty  -Name "Number" -Value $index; $index++}
+
+    Write-Host ($accounts | Format-Table | Out-String)
+
+    $minNumber = 1
+    $maxNumber = $accounts.Length
+    Do {
+        Try {
+            $numberIsParsed = $true
+            [int]$chosenAccountNumber = Read-Host "Please choose the account number from $minNumber to $maxNumber"
+        }
+        Catch {
+            Write-Warning "Incorrect number"
+            $numberIsParsed = $false
+        }
+    }
+    Until (($chosenAccountNumber -ge $minNumber -and $chosenAccountNumber -le $maxNumber) -and $numberIsParsed)
+
+    $subscriptionId = $accounts[$chosenAccountNumber - 1].id
+    az account set --subscription $subscriptionId
+
+    return $subscriptionId
+}
+
 Function DownloadProject
 {
     $uri = "https://github.com/$owner/$repo_name/archive/$branch.zip"
@@ -60,6 +100,8 @@ Function CreateUsers
         $users | Export-Csv -NoTypeInformation -Path ".\domain_users_list.csv"
     }
 }
+
+$subscriptionId = AzureLogin
 
 $vars =
 ""
