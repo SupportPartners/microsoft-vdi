@@ -111,7 +111,10 @@ $tenantId = $loggedAccount.tenantId
 $users_count = CreateUsers
 
 $vars =
-""
+"subscription_id = `"$subscriptionId`"
+sp_tenant_id    = `"$tenantId`"
+
+"
 
 DownloadProject
 
