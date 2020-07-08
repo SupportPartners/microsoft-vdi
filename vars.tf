@@ -2,14 +2,6 @@ variable "subscription_id" {
   description = "Subscription id of deployment"
 }
 
-variable "client_id" {
-  description = "Service principal client id for authorizing in Azure"
-}
-
-variable "client_secret" {
-  description = "Service principal client secret for authorizing in Azure"
-}
-
 variable "sp_tenant_id" {
   description = "Service principal tenant id for authorizing in Azure"
 }
