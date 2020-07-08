@@ -349,6 +349,15 @@ module "active-directory-domain" {
   fs_dependancy                 = module.storage.storage_created
 }
 
+module "cam-pre-requisites" {
+  source                  = "./modules/cam-pre-requisites"
+  pcoip_registration_code = var.pcoip_registration_code
+  subscription_id         = var.subscription_id
+  client_id               = var.client_id
+  client_secret           = var.client_secret
+  tenant_id               = var.sp_tenant_id
+}
+
 module "cac" {
   source = "./modules/cac"
 
@@ -359,7 +368,7 @@ module "cac" {
   virtual_machine_name        = local.cac_virtual_machine_name
   cam_url                     = var.cam_url
   pcoip_registration_code     = var.pcoip_registration_code
-  cac_token                   = var.cac_token
+  cac_token                   = module.cam-pre-requisites.cac_token
   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
   domain_controller_ip        = azurerm_network_interface.dc_nic.private_ip_address
   domain_group                = var.domain_group
@@ -403,7 +412,7 @@ module "persona-1" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 1 ? var.windows_std_count : 0
+  instance_count              = var.windows_std_persona == 1 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -441,7 +450,7 @@ module "persona-2" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 2 ? var.windows_std_count : 0
+  instance_count              = var.windows_std_persona == 2 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -479,7 +488,7 @@ module "persona-3" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 3 ? var.windows_std_count : 0
+  instance_count              = var.windows_std_persona == 3 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container

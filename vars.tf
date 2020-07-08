@@ -55,11 +55,6 @@ variable "pcoip_agent_location" {
   description = "URL of Teradici PCoIP Standard Agent"
 }
 
-variable "cac_token" {
-  description = "Connector Token from CAM Service"
-  type        = string
-}
-
 variable "domain_group" {
   description = "Active Directory Distinguished Name for the User Group to log into the CAM Management Interface. Default is 'Domain Admins'. (eg, 'CN=CAM Admins,CN=Users,DC=example,DC=com')"
 }
@@ -239,6 +234,11 @@ variable "_artifactsLocationSasToken" {
   type        = string
 }
 
+variable "cam_service_token" {
+  type    = "string"
+  description = "Terradici Cloud Access Manager Service Token"
+}
+
 locals {
   dc_virtual_machine_name  = "vm-vdi-dc${var.deployment_index}"
   cac_virtual_machine_name = "vm-vdi-cac${var.deployment_index}"
@@ -248,4 +248,5 @@ locals {
     "Client Name", "${var.client_name}",
     "Createdby", "Supportpartners"
   )}"
+  windows_std_count        = length(csvdecode(file("${path.root}/domain_users_list.csv")))
 }

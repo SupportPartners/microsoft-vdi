@@ -12,3 +12,14 @@ provider "azurerm" {
 
   features {}
 }
+
+provider "restapi" {
+  version = "1.13.0-windows-amd64"
+  uri                  = "https://cam.teradici.com/api/v1/"
+  debug                = true
+  write_returns_object = true
+  headers              = {
+    Content-Type       = "application/json"
+    Authorization      = "${var.cam_service_token}"
+  }
+}
