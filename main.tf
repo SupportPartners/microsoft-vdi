@@ -9,6 +9,7 @@ module "app-registration" {
   source = "./modules/app-registration"
 
   application_name = azurerm_resource_group.vdi_resource_group.name
+  subscription_id  = var.subscription_id
 }
 
 module "storage" {

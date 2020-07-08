@@ -18,3 +18,9 @@ resource "azuread_application_password" "vdi-service-principal-app-secret" {
   value                 = "${random_password.vdi-service-principal-password.result}"
   end_date              = "2040-01-01T00:00:00Z"
 }
+
+resource "azurerm_role_assignment" "vdi-role-assignment" {
+  scope                = "/subscriptions/${var.subscription_id}"
+  role_definition_name = "Virtual Machine Contributor"
+  principal_id         = azuread_service_principal.vdi-service-principal.object_id
+}

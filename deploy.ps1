@@ -20,7 +20,7 @@ Function AzureLogin
         az login
     }
 
-    $accounts = az account list --query "[].{Name: name, Id: id}" | ConvertFrom-Json
+    $accounts = az account list --query "[].{Name: name, Id: id, TenantId: tenantId}" | ConvertFrom-Json
     $accounts | Foreach-Object { $index = 1 } {Add-Member -InputObject $_ -MemberType NoteProperty  -Name "Number" -Value $index; $index++}
 
     Write-Host ($accounts | Format-Table | Out-String)
@@ -39,10 +39,11 @@ Function AzureLogin
     }
     Until (($chosenAccountNumber -ge $minNumber -and $chosenAccountNumber -le $maxNumber) -and $numberIsParsed)
 
-    $subscriptionId = $accounts[$chosenAccountNumber - 1].id
+    $chosenAccount = $accounts[$chosenAccountNumber - 1]
+    $subscriptionId = $chosenAccount.id
     az account set --subscription $subscriptionId
 
-    return $subscriptionId
+    return $chosenAccount
 }
 
 Function DownloadProject
@@ -103,7 +104,10 @@ Function CreateUsers
     return $users.Count
 }
 
-$subscriptionId = AzureLogin
+$loggedAccount = AzureLogin
+
+$subscriptionId = $loggedAccount.id
+$tenantId = $loggedAccount.tenantId
 $users_count = CreateUsers
 
 $vars =
