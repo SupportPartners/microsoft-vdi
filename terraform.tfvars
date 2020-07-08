@@ -60,4 +60,3 @@ ssl_cert = ""
 # cac_admin_password          = ""
 # windows_std_admin_username  = ""
 # windows_std_admin_password  = ""
-# windows_std_count           = 1

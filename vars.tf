@@ -161,10 +161,6 @@ variable "windows_std_persona" {
   description = "Persona type of deploying VM"
 }
 
-variable "windows_std_count" {
-  description = "Number of windows standard agents to deploy"
-}
-
 variable "key_vault_id" {
   description = "The key vault resource ID"
   type        = string
