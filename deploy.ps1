@@ -14,6 +14,7 @@ Function AzureLogin
     Catch [System.Management.Automation.CommandNotFoundException]
     {
         Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
     }
 
     If ($accountsNumber -le 1) {
