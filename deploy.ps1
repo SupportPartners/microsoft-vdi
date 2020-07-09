@@ -67,21 +67,31 @@ Function DownloadTerraform([string] $directory)
     Remove-Item -Path $terraform_zip
 }
 
+Function DownloadTerraformPlugins([string] $directory)
+{
+    $restApiProviderVersion = "1.13.0"
+    $os = "windows"
+    $arch = "amd64"
+
+    # Invoke-WebRequest -Uri "https://github.com/Mastercard/terraform-provider-restapi/releases/download/v1.13.0/terraform-provider-restapi_v1.13.0-windows-amd64" -OutFile "$path/terraform-provider-restapi_v1.13.0-windows-amd64"
+    $name = "terraform-provider-restapi_v1.13.0-${os}-${arch}"
+    $uri = "https://github.com/Mastercard/terraform-provider-restapi/releases/download/v${restApiProviderVersion}/${name}"
+    $path = "${directory}/terraform.d/plugins/windows_amd64"
+
+    If(!(test-path $path))
+    {
+        New-Item -ItemType Directory -Force -Path $path
+    }
+    Invoke-WebRequest -Uri $uri -OutFile "$path/${name}"
+}
+
 Function CreateUsers
 {
     if ((Test-Path ".\domain_users_list.csv") -eq $False) {
-        $isUserAdding = $True
         $users = @()
-    
+
+        Write-Host "In order to create workstations you need to create at list one user. Each user will be assigned to the single workstation. Max 5 users"
         Do {
-            $doContinue = Read-Host "Do you want to add user? y/N"
-            If ($doContinue -eq "y") {
-                $isUserAdding = $True
-            } Else {
-                $isUserAdding = $False
-                continue
-            }
-    
             $username = Read-Host "Username"
             $password = Read-Host "Password"
             $firstname = Read-Host "Firstname"
@@ -95,8 +105,12 @@ Function CreateUsers
                 lastname = $lastname
                 # isadmin = $isadmin
             }
+            if ($users.Count -gt 4) {
+                break;
+            }
+            $doContinue = Read-Host "Do you want to add another user? y/N"
         }
-        Until ($isUserAdding -eq $False)
+        While ($doContinue -eq "y")
 
         $users | Export-Csv -NoTypeInformation -Path ".\domain_users_list.csv"
     }
@@ -125,6 +139,7 @@ $tfvars_file = "user-vars.tfvars"
 New-Item -Path . -Name $tfvars_file -ItemType "file" -Force -Value $vars
 
 DownloadTerraform($repo_directory)
+DownloadTerraformPlugins($repo_directory)
 
 .\terraform.exe init
 .\terraform.exe apply -var-file="$tfvars_file"
