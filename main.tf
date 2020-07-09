@@ -1,3 +1,10 @@
+data "http" "myip" {
+  url = "https://ipinfo.io/ip"
+}
+
+data "azurerm_subscription" "current" {
+}
+
 resource "time_static" "date_creation" {}
 
 resource "azurerm_resource_group" "vdi_resource_group" {
@@ -9,7 +16,7 @@ module "app-registration" {
   source = "./modules/app-registration"
 
   application_name = azurerm_resource_group.vdi_resource_group.name
-  subscription_id  = var.subscription_id
+  subscription_id  = data.azurerm_subscription.current.id
 }
 
 module "storage" {
@@ -25,10 +32,6 @@ module "storage" {
   assets_storage_account   = var.assets_storage_account
   assets_storage_container = var.assets_storage_container
   tags                     = local.common_tags
-}
-
-data "http" "myip" {
-  url = "https://ipinfo.io/ip"
 }
 
 resource "azurerm_virtual_network" "vdi_virtual_network" {
@@ -361,10 +364,10 @@ module "active-directory-domain" {
 module "cam-pre-requisites" {
   source                  = "./modules/cam-pre-requisites"
   pcoip_registration_code = var.pcoip_registration_code
-  subscription_id         = var.subscription_id
+  subscription_id         = data.azurerm_subscription.current.id
   client_id               = var.client_id
   client_secret           = var.client_secret
-  tenant_id               = var.sp_tenant_id
+  tenant_id               = data.azurerm_subscription.current.tenant_id
 }
 
 module "cam-post-deployment" {
@@ -372,7 +375,7 @@ module "cam-post-deployment" {
   cam_service_token      = var.cam_service_token
   cam_deployment_id      = module.cam-pre-requisites.deployment_id
   cam_connector_name     = module.cam-pre-requisites.connector_name
-  azure_subscription_id  = var.subscription_id
+  azure_subscription_id  = data.azurerm_subscription.current.id
   azure_resource_group   = azurerm_resource_group.vdi_resource_group.name
   vm_name                = local.vm_names[var.windows_std_persona]
   vm_count               = local.windows_std_count

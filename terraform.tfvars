@@ -42,12 +42,6 @@ key_vault_id                  = ""
 ssl_key  = ""
 ssl_cert = ""
 
-# User input variables
-# subscription_id = ""
-# client_id       = ""
-# client_secret   = ""
-# sp_tenant_id    = ""
-
 # deployment_index         = "001"
 # location                 = ""
 # storage_name             = ""

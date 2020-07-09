@@ -1,11 +1,3 @@
-variable "subscription_id" {
-  description = "Subscription id of deployment"
-}
-
-variable "sp_tenant_id" {
-  description = "Service principal tenant id for authorizing in Azure"
-}
-
 variable "base_name" {
   description = "Base name for all resources of all deployments"
 }
