@@ -16,7 +16,7 @@ module "app-registration" {
   source = "./modules/app-registration"
 
   application_name = azurerm_resource_group.vdi_resource_group.name
-  subscription_id  = data.azurerm_subscription.current.id
+  subscription_id  = data.azurerm_subscription.current.subscription_id
 }
 
 module "storage" {
@@ -364,7 +364,7 @@ module "active-directory-domain" {
 module "cam-pre-requisites" {
   source                  = "./modules/cam-pre-requisites"
   pcoip_registration_code = var.pcoip_registration_code
-  subscription_id         = data.azurerm_subscription.current.id
+  subscription_id         = data.azurerm_subscription.current.subscription_id
   client_id               = module.app-registration.client_id
   client_secret           = module.app-registration.client_secret
   tenant_id               = data.azurerm_subscription.current.tenant_id
@@ -375,7 +375,7 @@ module "cam-post-deployment" {
   cam_service_token      = var.cam_service_token
   cam_deployment_id      = module.cam-pre-requisites.deployment_id
   cam_connector_name     = module.cam-pre-requisites.connector_name
-  azure_subscription_id  = data.azurerm_subscription.current.id
+  azure_subscription_id  = data.azurerm_subscription.current.subscription_id
   azure_resource_group   = azurerm_resource_group.vdi_resource_group.name
   vm_name                = local.vm_names[var.windows_std_persona]
   vm_count               = local.windows_std_count
