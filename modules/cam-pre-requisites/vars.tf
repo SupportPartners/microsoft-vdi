@@ -20,6 +20,6 @@ variable "pcoip_registration_code" {
 
 
 locals {
-  deployment_name = "automated-deploy-${lower(formatdate("MMMM-DD", timestamp()))}"
+  deployment_name = "vdi-automated-${lower(formatdate("MMMM-DD", timestamp()))}"
   connector_name  = "cac-${lower(formatdate("MMMM-DD", timestamp()))}"
 }
