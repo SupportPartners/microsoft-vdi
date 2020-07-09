@@ -43,8 +43,6 @@ Function AzureLogin
     $chosenAccount = $accounts[$chosenAccountNumber - 1]
     $subscriptionId = $chosenAccount.id
     az account set --subscription $subscriptionId
-
-    return $chosenAccount
 }
 
 Function DownloadProject
@@ -121,25 +119,21 @@ $loggedAccount = AzureLogin
 
 CreateUsers
 
-# $vars =
-# "subscription_id = `"$subscriptionId`"
-# sp_tenant_id    = `"$tenantId`"
-
-# "
+$vars =
+""
 
 DownloadProject
 
 $repo_directory = Join-Path $PSScriptRoot "$repo_name-$branch"
 pushd $repo_directory
 
-# $tfvars_file = "user-vars.tfvars"
-# New-Item -Path . -Name $tfvars_file -ItemType "file" -Force -Value $vars
+$tfvars_file = "user-vars.tfvars"
+New-Item -Path . -Name $tfvars_file -ItemType "file" -Force -Value $vars
 
 DownloadTerraform($repo_directory)
 DownloadTerraformPlugins($repo_directory)
 
 .\terraform.exe init
-# .\terraform.exe apply -var-file="$tfvars_file"
-.\terraform.exe apply
+.\terraform.exe apply -var-file="$tfvars_file"
 
 popd
