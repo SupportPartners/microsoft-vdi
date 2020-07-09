@@ -18,6 +18,7 @@ provider "restapi" {
   uri                  = "https://cam.teradici.com/api/v1/"
   debug                = true
   write_returns_object = true
+  rate_limit           = 0.25
   headers              = {
     Content-Type       = "application/json"
     Authorization      = "${var.cam_service_token}"

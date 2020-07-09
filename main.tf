@@ -358,6 +358,18 @@ module "cam-pre-requisites" {
   tenant_id               = var.sp_tenant_id
 }
 
+module "cam-post-deployment" {
+  source                 = "./modules/cam-post-deployment"
+  cam_service_token      = var.cam_service_token
+  cam_deployment_id      = module.cam-pre-requisites.deployment_id
+  cam_connector_name     = module.cam-pre-requisites.connector_name
+  azure_subscription_id  = var.subscription_id
+  azure_resource_group   = azurerm_resource_group.vdi_resource_group.name
+  vm_name                = local.vm_names[var.windows_std_persona]
+  vm_count               = local.windows_std_count
+  workstations           = local.workstations
+}
+
 module "cac" {
   source = "./modules/cac"
 
@@ -402,7 +414,7 @@ module "persona-1" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv6"
+  vm_name                     = local.vm_names[1]
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -431,7 +443,7 @@ module "persona-1" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
-  vm_depends_on               = module.active-directory-domain.domain_users_created
+  vm_depends_on               = module.cac.cac_created
 }
 
 module "persona-2" {
@@ -440,7 +452,7 @@ module "persona-2" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv12"
+  vm_name                     = local.vm_names[2]
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -469,7 +481,7 @@ module "persona-2" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
-  vm_depends_on               = module.active-directory-domain.domain_users_created
+  vm_depends_on               = module.cac.cac_created
 }
 
 module "persona-3" {
@@ -478,7 +490,7 @@ module "persona-3" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv24"
+  vm_name                     = local.vm_names[3]
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -507,5 +519,5 @@ module "persona-3" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
-  vm_depends_on               = module.active-directory-domain.domain_users_created
+  vm_depends_on               = module.cac.cac_created
 }

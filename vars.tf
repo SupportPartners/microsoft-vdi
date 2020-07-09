@@ -245,4 +245,10 @@ locals {
     "Createdby", "Supportpartners"
   )}"
   windows_std_count        = length(csvdecode(file("${path.root}/domain_users_list.csv")))
+  vm_names                 = {
+                               1 = "vmWin10Nv6"
+                               2 = "vmWin10Nv12"
+                               3 = "vmWin10Nv24"
+                             }
+  workstations             = concat(module.persona-1.workstations, module.persona-2.workstations, module.persona-3.workstations)
 }
