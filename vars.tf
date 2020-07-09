@@ -2,14 +2,6 @@ variable "subscription_id" {
   description = "Subscription id of deployment"
 }
 
-variable "client_id" {
-  description = "Service principal client id for authorizing in Azure"
-}
-
-variable "client_secret" {
-  description = "Service principal client secret for authorizing in Azure"
-}
-
 variable "sp_tenant_id" {
   description = "Service principal tenant id for authorizing in Azure"
 }
@@ -218,6 +210,16 @@ variable "client_name" {
 
 variable "environment" {
   description = "Environment for tags"
+  type        = string
+}
+
+variable "assets_storage_account" {
+  description = "Source storage account for downloading assets to file share"
+  type        = string
+}
+
+variable "assets_storage_container" {
+  description = "Source storage container for downloading assets to file share"
   type        = string
 }
 

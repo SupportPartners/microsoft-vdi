@@ -5,17 +5,26 @@ resource "azurerm_resource_group" "vdi_resource_group" {
   name     = var.resource_group_name != "" ? var.resource_group_name : "rg-${var.base_name}-infra-${var.deployment_index}"
 }
 
+module "app-registration" {
+  source = "./modules/app-registration"
+
+  application_name = azurerm_resource_group.vdi_resource_group.name
+  subscription_id  = var.subscription_id
+}
+
 module "storage" {
   source = "./modules/storage"
 
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  deployment_index    = var.deployment_index
-  location            = var.location
-  storage_name        = var.storage_name
-  is_premium_storage  = var.windows_std_persona > 1
-  diag_storage_name   = var.diag_storage_name
-  file_share_quota    = var.file_share_quota != "" ? var.file_share_quota : 5120
-  tags                = local.common_tags
+  resource_group_name      = azurerm_resource_group.vdi_resource_group.name
+  deployment_index         = var.deployment_index
+  location                 = var.location
+  storage_name             = var.storage_name
+  is_premium_storage       = var.windows_std_persona > 1
+  diag_storage_name        = var.diag_storage_name
+  file_share_quota         = var.file_share_quota != "" ? var.file_share_quota : 5120
+  assets_storage_account   = var.assets_storage_account
+  assets_storage_container = var.assets_storage_container
+  tags                     = local.common_tags
 }
 
 data "http" "myip" {

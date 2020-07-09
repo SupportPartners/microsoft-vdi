@@ -249,6 +249,12 @@
         "imageReference":  {
           "id": "[parameters('image_id')]"
         },
+        "osDisk": {
+          "createOption":"FromImage",
+          "managedDisk": {
+            "storageAccountType": "StandardSSD_LRS"
+          }
+        },
         "dataDisks": [
           {
             "name": "[concat(variables('vmName'), '-SSD-E3-disk2')]",
