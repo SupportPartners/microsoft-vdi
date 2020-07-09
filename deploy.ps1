@@ -114,15 +114,13 @@ Function CreateUsers
 
         $users | Export-Csv -NoTypeInformation -Path ".\domain_users_list.csv"
     }
-
-    return $users.Count
 }
 
 $loggedAccount = AzureLogin
 
 $subscriptionId = $loggedAccount.id
 $tenantId = $loggedAccount.tenantId
-$users_count = CreateUsers
+CreateUsers
 
 $vars =
 "subscription_id = `"$subscriptionId`"
