@@ -365,8 +365,8 @@ module "cam-pre-requisites" {
   source                  = "./modules/cam-pre-requisites"
   pcoip_registration_code = var.pcoip_registration_code
   subscription_id         = data.azurerm_subscription.current.id
-  client_id               = var.client_id
-  client_secret           = var.client_secret
+  client_id               = module.app-registration.client_id
+  client_secret           = module.app-registration.client_secret
   tenant_id               = data.azurerm_subscription.current.tenant_id
 }
 
