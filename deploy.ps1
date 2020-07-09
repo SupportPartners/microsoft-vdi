@@ -1,6 +1,7 @@
 $owner = "SupportPartners"
 $repo_name = "microsoft-vdi"
 $branch = "master"
+$branchEncoded = [System.Web.HTTPUtility]::UrlEncode($branch)
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $wc = New-Object System.Net.WebClient
@@ -49,8 +50,8 @@ Function AzureLogin
 
 Function DownloadProject
 {
-    $uri = "https://github.com/$owner/$repo_name/archive/$branch.zip"
-    $zip = Join-Path $PSScriptRoot "$branch.zip"
+    $uri = "https://github.com/$owner/$repo_name/archive/$branchEncoded.zip"
+    $zip = Join-Path $PSScriptRoot "$branchEncoded.zip"
     $wc.DownloadFile($uri, $zip)
     Expand-Archive -Path $zip -DestinationPath $PSScriptRoot -Force
     Remove-Item -Path $zip
@@ -119,7 +120,7 @@ sp_tenant_id    = `"$tenantId`"
 
 DownloadProject
 
-$repo_directory = Join-Path $PSScriptRoot "$repo_name-$branch"
+$repo_directory = Join-Path $PSScriptRoot "$repo_name-$branchEncoded"
 pushd $repo_directory
 
 $tfvars_file = "user-vars.tfvars"
