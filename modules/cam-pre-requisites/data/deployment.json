@@ -1,0 +1,4 @@
+{
+    "deploymentName": "${deployment_name}",
+    "registrationCode": "${cam_registration_code}"
+}

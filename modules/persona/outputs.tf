@@ -8,3 +8,7 @@
 output "internal-ip" {
   value = "${azurerm_template_deployment.windows[*].outputs.private-ip}"
 }
+
+output "workstations" {
+  value = azurerm_template_deployment.windows
+}

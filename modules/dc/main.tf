@@ -60,6 +60,7 @@ data "template_file" "gpo-templates" {
 }
 
 resource "azurerm_windows_virtual_machine" "domain-controller" {
+  depends_on          = [var.dependency]
   name                = var.virtual_machine_name
   resource_group_name = var.resource_group_name
   location            = var.location

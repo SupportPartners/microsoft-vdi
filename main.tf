@@ -1,3 +1,10 @@
+data "http" "myip" {
+  url = "https://ipinfo.io/ip"
+}
+
+data "azurerm_subscription" "current" {
+}
+
 resource "time_static" "date_creation" {}
 
 resource "azurerm_resource_group" "vdi_resource_group" {
@@ -9,7 +16,7 @@ module "app-registration" {
   source = "./modules/app-registration"
 
   application_name = azurerm_resource_group.vdi_resource_group.name
-  subscription_id  = var.subscription_id
+  subscription_id  = data.azurerm_subscription.current.subscription_id
 }
 
 module "storage" {
@@ -25,10 +32,6 @@ module "storage" {
   assets_storage_account   = var.assets_storage_account
   assets_storage_container = var.assets_storage_container
   tags                     = local.common_tags
-}
-
-data "http" "myip" {
-  url = "https://ipinfo.io/ip"
 }
 
 resource "azurerm_virtual_network" "vdi_virtual_network" {
@@ -332,6 +335,7 @@ resource "azurerm_subnet_network_security_group_association" "workstation" {
 module "active-directory-domain" {
   source = "./modules/dc"
 
+  dependency          = module.app-registration.app_registration_created
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   location            = azurerm_resource_group.vdi_resource_group.location
   deployment_index    = var.deployment_index
@@ -358,6 +362,28 @@ module "active-directory-domain" {
   fs_dependancy                 = module.storage.storage_created
 }
 
+module "cam-pre-requisites" {
+  source                  = "./modules/cam-pre-requisites"
+  pcoip_registration_code = var.pcoip_registration_code
+  subscription_id         = data.azurerm_subscription.current.subscription_id
+  client_id               = module.app-registration.client_id
+  client_secret           = module.app-registration.client_secret
+  tenant_id               = data.azurerm_subscription.current.tenant_id
+  dependency              = module.active-directory-domain.domain_users_created
+}
+
+module "cam-post-deployment" {
+  source                 = "./modules/cam-post-deployment"
+  cam_service_token      = var.cam_service_token
+  cam_deployment_id      = module.cam-pre-requisites.deployment_id
+  cam_connector_name     = module.cam-pre-requisites.connector_name
+  azure_subscription_id  = data.azurerm_subscription.current.subscription_id
+  azure_resource_group   = azurerm_resource_group.vdi_resource_group.name
+  vm_name                = local.vm_names[var.windows_std_persona]
+  vm_count               = local.windows_std_count
+  workstations           = local.workstations
+}
+
 module "cac" {
   source = "./modules/cac"
 
@@ -368,7 +394,7 @@ module "cac" {
   virtual_machine_name        = local.cac_virtual_machine_name
   cam_url                     = var.cam_url
   pcoip_registration_code     = var.pcoip_registration_code
-  cac_token                   = var.cac_token
+  cac_token                   = module.cam-pre-requisites.cac_token
   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
   domain_controller_ip        = azurerm_network_interface.dc_nic.private_ip_address
   domain_group                = var.domain_group
@@ -393,7 +419,7 @@ module "cac" {
   ad_pass_secret_id           = var.ad_pass_secret_id
   cac_token_secret_id         = var.cac_token_secret_id
   _artifactsLocation          = var._artifactsLocation
-  vm_depends_on               = module.active-directory-domain.domain_users_created
+  vm_depends_on               = module.cam-pre-requisites.service_account_created
 }
 
 module "persona-1" {
@@ -402,7 +428,7 @@ module "persona-1" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv6"
+  vm_name                     = local.vm_names[1]
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -412,7 +438,7 @@ module "persona-1" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 1 ? var.windows_std_count : 0
+  instance_count              = var.windows_std_persona == 1 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -431,7 +457,7 @@ module "persona-1" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
-  vm_depends_on               = module.active-directory-domain.domain_users_created
+  vm_depends_on               = module.cac.cac_created
 }
 
 module "persona-2" {
@@ -440,7 +466,7 @@ module "persona-2" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv12"
+  vm_name                     = local.vm_names[2]
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -450,7 +476,7 @@ module "persona-2" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 2 ? var.windows_std_count : 0
+  instance_count              = var.windows_std_persona == 2 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -469,7 +495,7 @@ module "persona-2" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
-  vm_depends_on               = module.active-directory-domain.domain_users_created
+  vm_depends_on               = module.cac.cac_created
 }
 
 module "persona-3" {
@@ -478,7 +504,7 @@ module "persona-3" {
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   azure_region        = azurerm_resource_group.vdi_resource_group.location
 
-  vm_name                     = "vmWin10Nv24"
+  vm_name                     = local.vm_names[3]
   base_name                   = var.base_name
   image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
@@ -488,7 +514,7 @@ module "persona-3" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 3 ? var.windows_std_count : 0
+  instance_count              = var.windows_std_persona == 3 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -507,5 +533,5 @@ module "persona-3" {
   _artifactsLocation          = var._artifactsLocation
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
-  vm_depends_on               = module.active-directory-domain.domain_users_created
+  vm_depends_on               = module.cac.cac_created
 }
