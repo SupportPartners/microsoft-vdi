@@ -103,8 +103,9 @@ variable "fs_dependancy" {
 
 locals {
   use_secret_or_not    = var.ad_admin_password != "" ? { ad_admin_password = var.ad_admin_password } : { ad_admin_password = tostring(data.azurerm_key_vault_secret.ad-pass[0].value) }
+  ad_admin_password_escaped = replace(replace(replace(replace(replace(local.use_secret_or_not.ad_admin_password, "&", "&amp;"), ">", "&gt;"), "<", "&lt;"), "'", "&apos;"), "\"", " &quot;")
   virtual_machine_fqdn = join(".", [var.virtual_machine_name, var.active_directory_domain_name])
-  auto_logon_data      = "<AutoLogon><Password><Value>${local.use_secret_or_not.ad_admin_password}</Value></Password><Enabled>true</Enabled><LogonCount>1</LogonCount><Username>${var.ad_admin_username}</Username></AutoLogon>"
+  auto_logon_data      = "<AutoLogon><Password><Value>${local.ad_admin_password_escaped}</Value></Password><Enabled>true</Enabled><LogonCount>1</LogonCount><Username>${var.ad_admin_username}</Username></AutoLogon>"
   first_logon_data     = file("${path.module}/files/FirstLogonCommands.xml")
   custom_data_params   = "Param($RemoteHostName = \"${local.virtual_machine_fqdn}\", $ComputerName = \"${var.virtual_machine_name}\")"
   custom_data          = base64encode(join(" ", [local.custom_data_params, file("${path.module}/files/winrm.ps1")]))
