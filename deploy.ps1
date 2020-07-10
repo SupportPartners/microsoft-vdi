@@ -117,8 +117,6 @@ Function CreateUsers
 
 $loggedAccount = AzureLogin
 
-CreateUsers
-
 $vars =
 ""
 
@@ -126,6 +124,8 @@ DownloadProject
 
 $repo_directory = Join-Path $PSScriptRoot "$repo_name-$branch"
 pushd $repo_directory
+
+CreateUsers
 
 $tfvars_file = "user-vars.tfvars"
 New-Item -Path . -Name $tfvars_file -ItemType "file" -Force -Value $vars
