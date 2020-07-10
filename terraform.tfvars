@@ -20,6 +20,8 @@ golden_image_id               = "/subscriptions/c28be9ee-97ed-4251-ab14-43090bbc
 windows_std_vm_size           = "Standard_B2ms"
 windows_std_hostname          = "windows-std-workstation"
 windows_std_persona           = 1
+assets_storage_account        = "azdemostdstore"
+assets_storage_container      = "azurefsstd"
 #_artifactsLocation            = "https://stteradicisa.blob.core.windows.net/teradicisacontainer/"
 _artifactsLocation            = "https://teradicisa.blob.core.windows.net/teradicisacontainer/"
 _artifactsLocationSasToken    = ""
@@ -40,12 +42,6 @@ key_vault_id                  = ""
 ssl_key  = ""
 ssl_cert = ""
 
-# User input variables
-# subscription_id = ""
-# client_id       = ""
-# client_secret   = ""
-# sp_tenant_id    = ""
-
 # deployment_index         = "001"
 # location                 = ""
 # storage_name             = ""
@@ -60,4 +56,3 @@ ssl_cert = ""
 # cac_admin_password          = ""
 # windows_std_admin_username  = ""
 # windows_std_admin_password  = ""
-# windows_std_count           = 1
