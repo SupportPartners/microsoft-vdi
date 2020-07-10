@@ -18,6 +18,9 @@ variable "pcoip_registration_code" {
   type        = string
 }
 
+variable "dependency" {
+}
+
 
 locals {
   deployment_name = "vdi-automated-${lower(formatdate("MMMM-DD", timestamp()))}"

@@ -8,6 +8,7 @@ data "template_file" "data_cam_deployment" {
 }
 
 data "template_file" "data_cam_service_account" {
+  depends_on = [var.dependency]
   template = file("${path.module}/data/service-account.json")
 
   vars = {

@@ -335,6 +335,7 @@ resource "azurerm_subnet_network_security_group_association" "workstation" {
 module "active-directory-domain" {
   source = "./modules/dc"
 
+  dependency          = module.app-registration.app_registration_created
   resource_group_name = azurerm_resource_group.vdi_resource_group.name
   location            = azurerm_resource_group.vdi_resource_group.location
   deployment_index    = var.deployment_index
@@ -368,6 +369,7 @@ module "cam-pre-requisites" {
   client_id               = module.app-registration.client_id
   client_secret           = module.app-registration.client_secret
   tenant_id               = data.azurerm_subscription.current.tenant_id
+  dependency              = module.active-directory-domain.domain_users_created
 }
 
 module "cam-post-deployment" {
@@ -417,7 +419,7 @@ module "cac" {
   ad_pass_secret_id           = var.ad_pass_secret_id
   cac_token_secret_id         = var.cac_token_secret_id
   _artifactsLocation          = var._artifactsLocation
-  vm_depends_on               = module.active-directory-domain.domain_users_created
+  vm_depends_on               = module.cam-pre-requisites.service_account_created
 }
 
 module "persona-1" {

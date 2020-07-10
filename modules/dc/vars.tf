@@ -101,6 +101,9 @@ variable "fs_stroage_password" {
 variable "fs_dependancy" {
 }
 
+variable "dependency" {
+}
+
 locals {
   use_secret_or_not    = var.ad_admin_password != "" ? { ad_admin_password = var.ad_admin_password } : { ad_admin_password = tostring(data.azurerm_key_vault_secret.ad-pass[0].value) }
   ad_admin_password_escaped = replace(replace(replace(replace(replace(local.use_secret_or_not.ad_admin_password, "&", "&amp;"), ">", "&gt;"), "<", "&lt;"), "'", "&apos;"), "\"", " &quot;")
