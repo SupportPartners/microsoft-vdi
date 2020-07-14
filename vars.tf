@@ -1,19 +1,3 @@
-variable "subscription_id" {
-  description = "Subscription id of deployment"
-}
-
-variable "client_id" {
-  description = "Service principal client id for authorizing in Azure"
-}
-
-variable "client_secret" {
-  description = "Service principal client secret for authorizing in Azure"
-}
-
-variable "sp_tenant_id" {
-  description = "Service principal tenant id for authorizing in Azure"
-}
-
 variable "base_name" {
   description = "Base name for all resources of all deployments"
 }
@@ -53,11 +37,6 @@ variable "pcoip_registration_code" {
 
 variable "pcoip_agent_location" {
   description = "URL of Teradici PCoIP Standard Agent"
-}
-
-variable "cac_token" {
-  description = "Connector Token from CAM Service"
-  type        = string
 }
 
 variable "domain_group" {
@@ -166,10 +145,6 @@ variable "windows_std_persona" {
   description = "Persona type of deploying VM"
 }
 
-variable "windows_std_count" {
-  description = "Number of windows standard agents to deploy"
-}
-
 variable "key_vault_id" {
   description = "The key vault resource ID"
   type        = string
@@ -230,6 +205,16 @@ variable "environment" {
   type        = string
 }
 
+variable "assets_storage_account" {
+  description = "Source storage account for downloading assets to file share"
+  type        = string
+}
+
+variable "assets_storage_container" {
+  description = "Source storage container for downloading assets to file share"
+  type        = string
+}
+
 variable "_artifactsLocation" {
   description = "The base URI where artifacts required by this template are located including a trailing '/'"
 }
@@ -237,6 +222,11 @@ variable "_artifactsLocation" {
 variable "_artifactsLocationSasToken" {
   description = "Sas Token of the URL is optional, only if required for security reasons"
   type        = string
+}
+
+variable "cam_service_token" {
+  type    = "string"
+  description = "Terradici Cloud Access Manager Service Token"
 }
 
 locals {
@@ -248,4 +238,11 @@ locals {
     "Client Name", "${var.client_name}",
     "Createdby", "Supportpartners"
   )}"
+  windows_std_count        = length(csvdecode(file("${path.root}/domain_users_list.csv")))
+  vm_names                 = {
+                               1 = "vmWin10Nv6"
+                               2 = "vmWin10Nv12"
+                               3 = "vmWin10Nv24"
+                             }
+  workstations             = concat(module.persona-1.workstations, module.persona-2.workstations, module.persona-3.workstations)
 }

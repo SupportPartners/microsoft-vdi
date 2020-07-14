@@ -27,6 +27,16 @@ variable "file_share_quota" {
   description = "Provisioned capacity of file share in GiB. Possible values 100-102400"
 }
 
+variable "assets_storage_account" {
+  description = "Source storage account for downloading assets to file share"
+  type        = string
+}
+
+variable "assets_storage_container" {
+  description = "Source storage container for downloading assets to file share"
+  type        = string
+}
+
 variable "tags" {
   description = "Common tags for storage resource"
 }
