@@ -28,15 +28,3 @@ resource "azurerm_storage_account" "diagnostic-storage-account" {
   account_kind             = "StorageV2"
   access_tier              = "Hot"
 }
-
-resource "null_resource" "copy-assets" {
-  depends_on = [azurerm_storage_share.file-share]
-
-  triggers = {
-    instance_id = azurerm_storage_share.file-share.id
-  }
-
-  provisioner "local-exec" {
-    command = "az storage file copy start-batch --destination-share ${azurerm_storage_share.file-share.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-share ${var.assets_storage_container} --pattern *"
-  }
-}
