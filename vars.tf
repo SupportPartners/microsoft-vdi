@@ -224,6 +224,11 @@ variable "_artifactsLocationSasToken" {
   type        = string
 }
 
+variable "cam_deployement_id" {
+  type    = "string"
+  description = "Terradici Cloud Access Manager Deployment Id"
+}
+
 variable "cam_service_token" {
   type    = "string"
   description = "Terradici Cloud Access Manager Service Token"

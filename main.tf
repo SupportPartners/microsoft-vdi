@@ -1,7 +1,3 @@
-data "http" "myip" {
-  url = "https://ipinfo.io/ip"
-}
-
 data "azurerm_subscription" "current" {
 }
 
@@ -34,302 +30,22 @@ module "storage" {
   tags                     = local.common_tags
 }
 
-resource "azurerm_virtual_network" "vdi_virtual_network" {
-  name                = "vnet-${var.base_name}-${var.deployment_index}"
-  location            = var.location
-  address_space       = ["10.0.0.0/16"]
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  dns_servers         = ["10.0.1.4", "168.63.129.16"]
-}
+module "network" {
+  source = "./modules/network"
 
-resource "azurerm_subnet" "dc" {
-  name                 = "snet-${var.base_name}-dc-${var.deployment_index}"
-  address_prefix       = var.dc_subnet_cidr
-  resource_group_name  = azurerm_resource_group.vdi_resource_group.name
-  virtual_network_name = azurerm_virtual_network.vdi_virtual_network.name
-}
-
-resource "azurerm_subnet" "cac" {
-  name                 = "snet-${var.base_name}-cac-${var.deployment_index}"
-  address_prefix       = var.cac_subnet_cidr
-  resource_group_name  = azurerm_resource_group.vdi_resource_group.name
-  virtual_network_name = azurerm_virtual_network.vdi_virtual_network.name
-  depends_on           = ["azurerm_subnet.dc"]
-}
-
-resource "azurerm_subnet" "workstation" {
-  name                 = "snet-${var.base_name}-workstation-${var.deployment_index}"
-  address_prefix       = var.ws_subnet_cidr
-  resource_group_name  = azurerm_resource_group.vdi_resource_group.name
-  virtual_network_name = azurerm_virtual_network.vdi_virtual_network.name
-  depends_on           = ["azurerm_subnet.cac"]
-}
-
-resource "azurerm_public_ip" "dc_ip" {
-  name                    = "pip-${local.dc_virtual_machine_name}-${var.deployment_index}"
-  location                = var.location
-  resource_group_name     = azurerm_resource_group.vdi_resource_group.name
-  allocation_method       = "Static"
-  idle_timeout_in_minutes = 30
-}
-
-resource "azurerm_public_ip" "cac" {
-  name                    = "pip-${local.cac_virtual_machine_name}-${var.deployment_index}"
-  location                = var.location
-  resource_group_name     = azurerm_resource_group.vdi_resource_group.name
-  allocation_method       = "Static"
-  idle_timeout_in_minutes = 30
-}
-
-resource "azurerm_public_ip" "nat" {
-  name                    = "pip-nat-${var.deployment_index}"
-  location                = var.location
-  resource_group_name     = azurerm_resource_group.vdi_resource_group.name
-  allocation_method       = "Static"
-  sku                     = "Standard"
-  zones                   = ["1"]
-  idle_timeout_in_minutes = 30
-}
-
-resource "azurerm_public_ip_prefix" "nat" {
-  name                = "nat-gateway-PIPP"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  prefix_length       = 30
-  zones               = ["1"]
-}
-
-resource "azurerm_nat_gateway" "nat" {
-  name                    = "nat-gateway"
-  location                = var.location
-  resource_group_name     = azurerm_resource_group.vdi_resource_group.name
-  public_ip_address_ids   = [azurerm_public_ip.nat.id]
-  public_ip_prefix_ids    = [azurerm_public_ip_prefix.nat.id]
-  sku_name                = "Standard"
-  idle_timeout_in_minutes = 10
-  zones                   = ["1"]
-}
-
-resource "null_resource" "delay_nat_gateway_association" {
-  provisioner "local-exec" {
-    command = "Start-Sleep 1"
-    interpreter = ["PowerShell", "-Command"]
-  }
-
-  triggers = {
-    "before" = "${azurerm_nat_gateway.nat.id}"
-  }
-}
-
-resource "azurerm_subnet_nat_gateway_association" "nat" {
-  subnet_id      = azurerm_subnet.workstation.id
-  nat_gateway_id = azurerm_nat_gateway.nat.id
-  depends_on     = ["null_resource.delay_nat_gateway_association"]
-}
-
-resource "azurerm_network_interface" "dc_nic" {
-  name                = "nic-${var.deployment_index}-${local.dc_virtual_machine_name}"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  ip_configuration {
-    name                          = "primary"
-    private_ip_address_allocation = "Static"
-    private_ip_address            = var.dc_private_ip
-    public_ip_address_id          = azurerm_public_ip.dc_ip.id
-    subnet_id                     = azurerm_subnet.dc.id
-  }
-}
-
-resource "null_resource" "delay_nic_dc" {
-  provisioner "local-exec" {
-    command = "Start-Sleep 1"
-    interpreter = ["PowerShell", "-Command"]
-  }
-
-  triggers = {
-    "before" = "${azurerm_network_interface.dc_nic.id}"
-  }
-}
-
-resource "azurerm_network_interface" "cac" {
-  name                = "nic-${var.deployment_index}-${local.cac_virtual_machine_name}"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  ip_configuration {
-    name                          = "primary"
-    private_ip_address_allocation = "Static"
-    private_ip_address            = var.cac_private_ip
-    public_ip_address_id          = azurerm_public_ip.cac.id
-    subnet_id                     = azurerm_subnet.cac.id
-  }
-  depends_on = ["null_resource.delay_nic_dc"]
-}
-
-resource "azurerm_private_dns_zone" "dns" {
-  name                = "dns.internal"
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-}
-
-resource "azurerm_private_dns_zone_virtual_network_link" "cac" {
-  name                  = "dns-vnet-link"
-  resource_group_name   = azurerm_resource_group.vdi_resource_group.name
-  private_dns_zone_name = azurerm_private_dns_zone.dns.name
-  virtual_network_id    = azurerm_virtual_network.vdi_virtual_network.id
-}
-
-resource "azurerm_private_dns_a_record" "dns" {
-  name                = var.active_directory_netbios_name
-  zone_name           = azurerm_private_dns_zone.dns.name
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  ttl                 = 300
-  records             = ["10.0.1.4"]
-}
-
-resource "azurerm_private_dns_srv_record" "dns-cac" {
-  name                = "_ldap._tcp.${var.active_directory_netbios_name}"
-  zone_name           = azurerm_private_dns_zone.dns.name
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  ttl                 = 300
-
-  record {
-    priority = 1
-    weight   = 1
-    port     = 389
-    target   = "${var.active_directory_netbios_name}.dns.internal"
-  }
-}
-
-resource "azurerm_private_dns_srv_record" "dns-ldaps" {
-  name                = "_ldap._tcp.vm-vdi-dc${var.deployment_index}.${var.active_directory_netbios_name}"
-  zone_name           = azurerm_private_dns_zone.dns.name
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  ttl                 = 300
-
-  record {
-    priority = 3
-    weight   = 3
-    port     = 389
-    target   = "${var.active_directory_netbios_name}.dns.internal"
-  }
-}
-
-resource "azurerm_private_dns_srv_record" "dns-win" {
-  name                = "_ldap._tcp.dc._msdcs.${var.active_directory_netbios_name}"
-  zone_name           = azurerm_private_dns_zone.dns.name
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-  ttl                 = 300
-
-  record {
-    priority = 2
-    weight   = 2
-    port     = 389
-    target   = "${var.active_directory_netbios_name}.dns.internal"
-  }
-}
-
-resource "azurerm_network_security_group" "nsg" {
-  name                = "nsg-${var.base_name}-${var.deployment_index}"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.vdi_resource_group.name
-
-  security_rule {
-    name                       = "AllowAllVnet"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_ranges    = ["1-65525"]
-    source_address_prefix      = "10.0.0.0/24"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowWinRM"
-    priority                   = 300
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "tcp"
-    source_port_range          = "*"
-    destination_port_range     = "5986"
-    source_address_prefix      = chomp(data.http.myip.body)
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowSSH"
-    priority                   = 400
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = chomp(data.http.myip.body)
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowRDP"
-    priority                   = 500
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_range     = "3389"
-    source_address_prefix      = chomp(data.http.myip.body)
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowPCoIP"
-    priority                   = 200
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "*"
-    source_port_range          = "*"
-    destination_port_ranges    = ["443", "4172"]
-    source_address_prefix      = var.allowed_client_cidrs
-    destination_address_prefix = "*"
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "cac" {
-  subnet_id                 = azurerm_subnet.cac.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-resource "null_resource" "delay_nsg_association_dc" {
-  provisioner "local-exec" {
-    command = "Start-Sleep 1"
-    interpreter = ["PowerShell", "-Command"]
-  }
-
-  triggers = {
-    "before" = "${azurerm_subnet_network_security_group_association.cac.id}"
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "dc" {
-  subnet_id                 = azurerm_subnet.dc.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-  depends_on                = ["null_resource.delay_nsg_association_dc"]
-}
-
-resource "null_resource" "delay_nsg_association_workstation" {
-  provisioner "local-exec" {
-    command = "Start-Sleep 1"
-    interpreter = ["PowerShell", "-Command"]
-  }
-
-  triggers = {
-    "before" = "${azurerm_subnet_network_security_group_association.dc.id}"
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "workstation" {
-  subnet_id                 = azurerm_subnet.workstation.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-  depends_on                = ["null_resource.delay_nsg_association_workstation"]
+  resource_group_name           = azurerm_resource_group.vdi_resource_group.name
+  location                      = var.location
+  base_name                     = var.base_name
+  deployment_index              = var.deployment_index
+  dc_subnet_cidr                = var.dc_subnet_cidr
+  cac_subnet_cidr               = var.cac_subnet_cidr
+  ws_subnet_cidr                = var.ws_subnet_cidr
+  dc_virtual_machine_name       = local.dc_virtual_machine_name
+  cac_virtual_machine_name      = local.cac_virtual_machine_name
+  dc_private_ip                 = var.dc_private_ip
+  cac_private_ip                = var.cac_private_ip
+  active_directory_netbios_name = var.active_directory_netbios_name
+  allowed_client_cidrs          = var.allowed_client_cidrs
 }
 
 module "active-directory-domain" {
@@ -346,7 +62,7 @@ module "active-directory-domain" {
   ad_admin_username             = var.ad_admin_username
   ad_admin_password             = var.ad_admin_password
   dc_machine_type               = var.dc_machine_type
-  nic_id                        = azurerm_network_interface.dc_nic.id
+  nic_id                        = module.network.dc_nic_id
   ad_pass_secret_name           = var.ad_pass_secret_name
   key_vault_id                  = var.key_vault_id
   application_id                = var.application_id
@@ -364,7 +80,7 @@ module "active-directory-domain" {
 
 module "cam-pre-requisites" {
   source                  = "./modules/cam-pre-requisites"
-  pcoip_registration_code = var.pcoip_registration_code
+  deployment_id           = var.cam_deployement_id
   subscription_id         = data.azurerm_subscription.current.subscription_id
   client_id               = module.app-registration.client_id
   client_secret           = module.app-registration.client_secret
@@ -375,7 +91,7 @@ module "cam-pre-requisites" {
 module "cam-post-deployment" {
   source                 = "./modules/cam-post-deployment"
   cam_service_token      = var.cam_service_token
-  cam_deployment_id      = module.cam-pre-requisites.deployment_id
+  cam_deployment_id      = var.cam_deployement_id
   cam_connector_name     = module.cam-pre-requisites.connector_name
   azure_subscription_id  = data.azurerm_subscription.current.subscription_id
   azure_resource_group   = azurerm_resource_group.vdi_resource_group.name
@@ -396,11 +112,11 @@ module "cac" {
   pcoip_registration_code     = var.pcoip_registration_code
   cac_token                   = module.cam-pre-requisites.cac_token
   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
-  domain_controller_ip        = azurerm_network_interface.dc_nic.private_ip_address
+  domain_controller_ip        = module.network.dc_nic_private_ip
   domain_group                = var.domain_group
   ad_service_account_username = var.ad_admin_username
   ad_service_account_password = var.ad_admin_password
-  nic_id                      = azurerm_network_interface.cac.id
+  nic_id                      = module.network.cac_nic_id
   instance_count              = var.instance_count
   host_name                   = var.cac_host_name
   machine_type                = var.cac_machine_type
@@ -410,8 +126,8 @@ module "cac" {
   cac_installer_url           = var.cac_installer_url
   ssl_key                     = var.ssl_key
   ssl_cert                    = var.ssl_cert
-  dns_zone_id                 = azurerm_private_dns_zone.dns.id
-  cac_ip                      = azurerm_public_ip.cac.ip_address
+  dns_zone_id                 = module.network.dns_id
+  cac_ip                      = module.network.cac_public_ip
   application_id              = var.application_id
   aad_client_secret           = var.aad_client_secret
   tenant_id                   = var.tenant_id
@@ -444,10 +160,10 @@ module "persona-1" {
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
   diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
-  vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
-  nsgID                       = azurerm_network_security_group.nsg.id
-  subnetID                    = azurerm_subnet.workstation.id
-  subnet_name                 = azurerm_subnet.workstation.name
+  vnet_name                   = module.network.virtual_network_name
+  nsgID                       = module.network.nsg_id
+  subnetID                    = module.network.subnet_workstation.id
+  subnet_name                 = module.network.subnet_workstation.name
   vm_size                     = "Standard_NV6"
   application_id              = var.application_id
   aad_client_secret           = var.aad_client_secret
@@ -482,10 +198,10 @@ module "persona-2" {
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
   diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
-  vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
-  nsgID                       = azurerm_network_security_group.nsg.id
-  subnetID                    = azurerm_subnet.workstation.id
-  subnet_name                 = azurerm_subnet.workstation.name
+  vnet_name                   = module.network.virtual_network_name
+  nsgID                       = module.network.nsg_id
+  subnetID                    = module.network.subnet_workstation.id
+  subnet_name                 = module.network.subnet_workstation.name
   vm_size                     = "Standard_NV12s_v3"
   application_id              = var.application_id
   aad_client_secret           = var.aad_client_secret
@@ -520,10 +236,10 @@ module "persona-3" {
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
   diagnostic_storage_url      = module.storage.diag_storage_blob_endpoint
-  vnet_name                   = azurerm_virtual_network.vdi_virtual_network.name
-  nsgID                       = azurerm_network_security_group.nsg.id
-  subnetID                    = azurerm_subnet.workstation.id
-  subnet_name                 = azurerm_subnet.workstation.name
+  vnet_name                   = module.network.virtual_network_name
+  nsgID                       = module.network.nsg_id
+  subnetID                    = module.network.subnet_workstation.id
+  subnet_name                 = module.network.subnet_workstation.name
   vm_size                     = "Standard_NV24s_v3"
   application_id              = var.application_id
   aad_client_secret           = var.aad_client_secret
