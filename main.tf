@@ -4,7 +4,7 @@ data "azurerm_subscription" "current" {
 resource "time_static" "date_creation" {}
 
 resource "azurerm_resource_group" "vdi_resource_group" {
-  location = var.location
+  location = var.common_location
   name     = var.resource_group_name != "" ? var.resource_group_name : "rg-${var.base_name}-infra-${var.deployment_index}"
 }
 
@@ -20,11 +20,11 @@ module "storage" {
 
   resource_group_name      = azurerm_resource_group.vdi_resource_group.name
   deployment_index         = var.deployment_index
-  location                 = var.location
+  location                 = var.common_location
   storage_name             = var.storage_name
-  is_premium_storage       = var.windows_std_persona > 1
+  is_premium_storage       = var.vm_persona > 1
   diag_storage_name        = var.diag_storage_name
-  file_share_quota         = var.file_share_quota != "" ? var.file_share_quota : 5120
+  file_share_quota         = var.storage_capacity != "" ? var.storage_capacity : 5120
   assets_storage_account   = var.assets_storage_account
   assets_storage_container = var.assets_storage_container
   tags                     = local.common_tags
@@ -34,7 +34,7 @@ module "network" {
   source = "./modules/network"
 
   resource_group_name           = azurerm_resource_group.vdi_resource_group.name
-  location                      = var.location
+  location                      = var.common_location
   base_name                     = var.base_name
   deployment_index              = var.deployment_index
   dc_subnet_cidr                = var.dc_subnet_cidr
@@ -95,8 +95,8 @@ module "cam-post-deployment" {
   cam_connector_name     = module.cam-pre-requisites.connector_name
   azure_subscription_id  = data.azurerm_subscription.current.subscription_id
   azure_resource_group   = azurerm_resource_group.vdi_resource_group.name
-  vm_name                = local.vm_names[var.windows_std_persona]
-  vm_count               = local.windows_std_count
+  vm_name                = local.vm_names[var.vm_persona]
+  vm_count               = local.vm_count
   workstations           = local.workstations
 }
 
@@ -154,7 +154,7 @@ module "persona-1" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 1 ? local.windows_std_count : 0
+  instance_count              = var.vm_persona == 1 ? local.vm_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -192,7 +192,7 @@ module "persona-2" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 2 ? local.windows_std_count : 0
+  instance_count              = var.vm_persona == 2 ? local.vm_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -230,7 +230,7 @@ module "persona-3" {
   admin_name                  = var.windows_std_admin_username
   admin_password              = var.windows_std_admin_password
   host_name                   = var.windows_std_hostname
-  instance_count              = var.windows_std_persona == 3 ? local.windows_std_count : 0
+  instance_count              = var.vm_persona == 3 ? local.vm_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
