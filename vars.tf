@@ -6,7 +6,7 @@ variable "resource_group_name" {
   description = "Resource group name. User input, overwriting name convention"
 }
 
-variable "location" {
+variable "common_location" {
   description = "The Azure Region in which all resources in this example should be created."
 }
 
@@ -22,7 +22,7 @@ variable "diag_storage_name" {
   description = "Base name for diagnostic storage. Will be prefixed with 'stdiag'"
 }
 
-variable "file_share_quota" {
+variable "storage_capacity" {
   description = "Provisioned capacity of file share in GiB. Possible values 100-102400. Default is 5120 Gib"
 }
 
@@ -141,7 +141,7 @@ variable "windows_std_admin_password" {
   type        = string
 }
 
-variable "windows_std_persona" {
+variable "vm_persona" {
   description = "Persona type of deploying VM"
 }
 
@@ -243,7 +243,7 @@ locals {
     "Client Name", "${var.client_name}",
     "Createdby", "Supportpartners"
   )}"
-  windows_std_count        = length(csvdecode(file("${path.root}/domain_users_list.csv")))
+  vm_count        = length(csvdecode(file("${path.root}/domain_users_list.csv")))
   vm_names                 = {
                                1 = "vmWin10Nv6"
                                2 = "vmWin10Nv12"
