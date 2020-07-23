@@ -21,12 +21,6 @@
         "description": "Resource Location."
       }
     },
-    "image_id": {
-      "type": "string",
-      "metadata": {
-        "description": "Id of the image in shared image gallery."
-      }
-    },
     "vmSize": {
       "type": "string",
       "defaultValue": "Standard_B2ms",
@@ -168,12 +162,27 @@
         },
         "defaultValue": ""
     },
+    "os_disk_uri": {
+      "type": "string",
+      "metadata": {
+          "description": "URI to os disk vhd"
+      },
+      "defaultValue": ""
+    },
+    "data_disk_uri": {
+      "type": "string",
+      "metadata": {
+          "description": "URI to data disk vhd"
+      },
+      "defaultValue": ""
+    },
     "vmTags": {
       "type": "string"
     }
 },
  
 "variables": {
+  "imageName": "[concat(parameters('base_name'),'img')]",
   "vmName": "[parameters('vmName')]",
   "location": "[parameters('location')]",
   "vmSize": "[parameters('vmSize')]",
@@ -200,6 +209,30 @@
   "cmdToExecute":  "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ',variables('Script2Run'),  variables('ScriptParams'))]"
 },
 "resources": [
+  {
+    "type": "Microsoft.Compute/images",
+    "apiVersion": "2019-12-01",
+    "name": "[variables('imageName')]",
+    "location": "[parameters('location')]",
+    "properties": {
+        "storageProfile": {
+            "osDisk": {
+                "osType": "Windows",
+                "osState": "Generalized",
+                "blobUri": "[parameters('os_disk_uri')]",
+                "storageAccountType": "[variables('VMDiskType')]"
+            },
+            "dataDisks": [
+              {
+                "lun": 0,
+                "blobUri": "[parameters('data_disk_uri')]",
+                "storageAccountType": "[variables('VMDiskType')]"
+              }
+            ]
+        },
+        "hyperVGeneration": "V1"
+    }
+  },
   { 
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2019-05-01",
@@ -239,7 +272,8 @@
     "location": "[variables('location')]",
     "tags": "[base64ToJson(base64(parameters('vmTags')))]",
     "dependsOn": [
-      "[variables('nicId')]"
+      "[variables('nicId')]",
+      "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
     ],
     "properties": {
       "hardwareProfile": {
@@ -247,7 +281,7 @@
       },
       "storageProfile": {
         "imageReference":  {
-          "id": "[parameters('image_id')]"
+          "id": "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
         },
         "osDisk": {
           "createOption":"FromImage",

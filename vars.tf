@@ -210,6 +210,11 @@ variable "assets_storage_account" {
   type        = string
 }
 
+variable "assets_storage_account_key" {
+  type    = "string"
+  description = "Access key for storage account containing demo assets and VM images"
+}
+
 variable "assets_storage_container" {
   description = "Source storage container for downloading assets to file share"
   type        = string

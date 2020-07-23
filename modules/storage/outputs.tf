@@ -14,7 +14,12 @@ output "diag_storage_blob_endpoint" {
   value = azurerm_storage_account.diagnostic-storage-account.primary_blob_endpoint
 }
 
+output "images_container_uri" {
+  value = "${azurerm_storage_account.storage-account.primary_blob_endpoint}${local.images_container_name}"
+  depends_on = [null_resource.copy-vm-images]
+}
+
 output "storage_created" {
     value      = {}
-    depends_on = [azurerm_storage_share.file-share]
+    depends_on = [azurerm_storage_share.file-share, null_resource.copy-vm-images]
 }

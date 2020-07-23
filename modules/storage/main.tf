@@ -12,6 +12,12 @@ resource "azurerm_storage_account" "storage-account" {
   )}"
 }
 
+resource "azurerm_storage_container" "vm-images-container" {
+  name                  = local.images_container_name
+  storage_account_name  = azurerm_storage_account.storage-account.name
+  container_access_type = "private"
+}
+
 resource "azurerm_storage_share" "file-share" {
   name                 = "demofileshare"
   storage_account_name =  azurerm_storage_account.storage-account.name
@@ -37,6 +43,18 @@ resource "null_resource" "copy-assets" {
   }
 
   provisioner "local-exec" {
-    command = "az storage file copy start-batch --destination-share ${azurerm_storage_share.file-share.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-share ${var.assets_storage_container} --pattern *"
+    command = "az storage file copy start-batch --destination-share ${azurerm_storage_share.file-share.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-account-key ${var.assets_storage_account_key} --source-share ${var.assets_storage_container} --pattern *"
+  }
+}
+
+resource "null_resource" "copy-vm-images" {
+  depends_on = [azurerm_storage_container.vm-images-container]
+
+  triggers = {
+    instance_id = azurerm_storage_container.vm-images-container.id
+  }
+
+  provisioner "local-exec" {
+    command = "az storage blob copy start-batch --destination-container ${azurerm_storage_container.vm-images-container.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-account-key ${var.assets_storage_account_key} --source-container images --pattern *"
   }
 }

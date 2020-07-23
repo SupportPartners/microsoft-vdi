@@ -28,8 +28,13 @@ variable "file_share_quota" {
 }
 
 variable "assets_storage_account" {
-  description = "Source storage account for downloading assets to file share"
+  description = "Source storage name account for downloading assets to file share"
   type        = string
+}
+
+variable "assets_storage_account_key" {
+  type    = "string"
+  description = "Access key for storage account containing demo assets and VM images"
 }
 
 variable "assets_storage_container" {
@@ -39,4 +44,8 @@ variable "assets_storage_container" {
 
 variable "tags" {
   description = "Common tags for storage resource"
+}
+
+locals {
+  images_container_name = "vm-images"
 }

@@ -1,0 +1,18 @@
+$files = @(
+    "win10-2004-NV-19_06img.vhd",
+    "win10-2004-NV-image-19june20disk2.vhd"
+)
+
+Write-Host "Awaiting VHDs to be copied to the container..."
+
+
+Do {
+    $isCompleted = $True
+    $files | ForEach-Object {
+        $blob = az storage blob show --account-name "${img_storage_account_name}" --account-key "${img_storage_account_key}" --container-name vm-images --name "./$_" | ConvertFrom-JSON
+        Write-Host "$_ - $($blob.properties.copy.status): $($blob.properties.copy.progress)"
+        $isCompleted = $isCompleted -and ($blob.properties.copy.status -ne "pending")
+    }
+    Start-Sleep 30
+}
+Until ($isCompleted -eq $True)

@@ -35,11 +35,6 @@ variable "host_name" {
   type        = string
 }
 
-variable "image_id" {
-  description = "Id of the image in shared image gallery"
-  type        = string
-}
-
 variable "pcoip_agent_location" {
   description = "URL of Teradici PCoIP Standard Agent"
   default     = "https://downloads.teradici.com/win/stable/"
@@ -157,6 +152,10 @@ variable "_artifactsLocation" {
 variable "_artifactsLocationSasToken" {
   description = "Sas Token of the URL is optional, only if required for security reasons"
   type        = string
+}
+
+variable "images_container_uri" {
+  type ="string"
 }
 
 variable "tags" {

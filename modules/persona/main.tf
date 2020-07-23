@@ -5,6 +5,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+data "template_file" "wait-for-images-script" {
+  template = file("${path.module}/wait-for-images.ps1.template")
+
+  vars = {
+    img_storage_account_name   = var.storage_account
+    img_storage_account_key    = var.storage_access_key
+  }
+  depends_on      = [null_resource.wait-for-images]
+}
+
+resource "local_file" "wait-for-images-script-prepare" {
+    content     = data.template_file.wait-for-images-script.rendered
+    filename    = "${path.module}/wait-for-images.ps1"
+}
+
+resource "null_resource" "wait-for-images" {
+  depends_on = [local_file.wait-for-images-script-prepare]
+
+  provisioner "local-exec" {
+    command = "${path.module}/wait-for-images.ps1"
+    interpreter = ["PowerShell", "-Command"]
+  }
+}
+
 resource "azurerm_template_deployment" "windows" {
   count               = var.instance_count
   name                = "ARMTemplate-windows-std-${count.index}"
@@ -14,7 +38,6 @@ resource "azurerm_template_deployment" "windows" {
     "base_name"                   = "${var.base_name}"
     "count_index"                 = "${format("%02d", count.index + 1)}"
     "location"                    = "${var.azure_region}"
-    "image_id"                    = "${var.image_id}"
     "vmSize"                      = "${var.vm_size}"
     "application_id"              = "${var.application_id}"
     "aad_client_secret"           = "${var.aad_client_secret}"
@@ -36,6 +59,8 @@ resource "azurerm_template_deployment" "windows" {
     "TeradiciRegKey"              = "${var.pcoip_registration_code}"
     "_artifactsLocation"          = "${var._artifactsLocation}"
     "_artifactsLocationSasToken"  = "${var._artifactsLocationSasToken}"
+    "os_disk_uri"                 = "${var.images_container_uri}/win10-2004-NV-19_06img.vhd"
+    "data_disk_uri"               = "${var.images_container_uri}/win10-2004-NV-image-19june20disk2.vhd"
     "vmTags"                      = "${jsonencode(merge(var.tags, map(
         "Type", "workstation",
         "OS", "Windows10",
@@ -43,7 +68,7 @@ resource "azurerm_template_deployment" "windows" {
     )))}"
   }
   deployment_mode = "Incremental"
-  depends_on      = [var.vm_depends_on]
+  depends_on      = [var.vm_depends_on, null_resource.wait-for-images]
 }
 
 resource "azurerm_template_deployment" "shutdown_schedule_template" {

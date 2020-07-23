@@ -18,16 +18,17 @@ module "app-registration" {
 module "storage" {
   source = "./modules/storage"
 
-  resource_group_name      = azurerm_resource_group.vdi_resource_group.name
-  deployment_index         = var.deployment_index
-  location                 = var.location
-  storage_name             = var.storage_name
-  is_premium_storage       = var.windows_std_persona > 1
-  diag_storage_name        = var.diag_storage_name
-  file_share_quota         = var.file_share_quota != "" ? var.file_share_quota : 5120
-  assets_storage_account   = var.assets_storage_account
-  assets_storage_container = var.assets_storage_container
-  tags                     = local.common_tags
+  resource_group_name        = azurerm_resource_group.vdi_resource_group.name
+  deployment_index           = var.deployment_index
+  location                   = var.location
+  storage_name               = var.storage_name
+  is_premium_storage         = var.windows_std_persona > 1
+  diag_storage_name          = var.diag_storage_name
+  file_share_quota           = var.file_share_quota != "" ? var.file_share_quota : 5120
+  assets_storage_account     = var.assets_storage_account
+  assets_storage_account_key = var.assets_storage_account_key
+  assets_storage_container   = var.assets_storage_container
+  tags                       = local.common_tags
 }
 
 module "network" {
@@ -146,7 +147,6 @@ module "persona-1" {
 
   vm_name                     = local.vm_names[1]
   base_name                   = var.base_name
-  image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
   ad_service_account_username = var.ad_admin_username
@@ -156,6 +156,7 @@ module "persona-1" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 1 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  images_container_uri        = module.storage.images_container_uri
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
@@ -184,7 +185,6 @@ module "persona-2" {
 
   vm_name                     = local.vm_names[2]
   base_name                   = var.base_name
-  image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
   ad_service_account_username = var.ad_admin_username
@@ -194,6 +194,7 @@ module "persona-2" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 2 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  images_container_uri        = module.storage.images_container_uri
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
@@ -222,7 +223,6 @@ module "persona-3" {
 
   vm_name                     = local.vm_names[3]
   base_name                   = var.base_name
-  image_id                    = var.golden_image_id
   pcoip_registration_code     = var.pcoip_registration_code
   domain_name                 = "${var.active_directory_netbios_name}.dns.internal"
   ad_service_account_username = var.ad_admin_username
@@ -232,6 +232,7 @@ module "persona-3" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 3 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  images_container_uri        = module.storage.images_container_uri
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
   storage_access_key          = module.storage.storage_access_key
