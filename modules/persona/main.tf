@@ -12,7 +12,7 @@ data "template_file" "wait-for-images-script" {
     img_storage_account_name   = var.storage_account
     img_storage_account_key    = var.storage_access_key
   }
-  depends_on      = [null_resource.wait-for-images]
+  depends_on      = [var.vm_depends_on]
 }
 
 resource "local_file" "wait-for-images-script-prepare" {
