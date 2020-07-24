@@ -248,7 +248,7 @@ locals {
     "Client Name", "${var.client_name}",
     "Createdby", "Supportpartners"
   )}"
-  vm_count        = length(csvdecode(file("${path.root}/domain_users_list.csv")))
+  vm_count                 = length(csvdecode(file("${path.root}/domain_users_list.csv")))
   vm_names                 = {
                                1 = "vmWin10Nv6"
                                2 = "vmWin10Nv12"
