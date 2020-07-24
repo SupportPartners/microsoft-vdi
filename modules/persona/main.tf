@@ -9,8 +9,8 @@ data "template_file" "wait-for-images-script" {
   template = file("${path.module}/wait-for-images.ps1.template")
 
   vars = {
-    img_storage_account_name   = var.storage_account
-    img_storage_account_key    = var.storage_access_key
+    img_storage_account_name   = var.images_storage_account
+    img_storage_account_key    = var.images_container_access_key
   }
   depends_on      = [var.vm_depends_on]
 }

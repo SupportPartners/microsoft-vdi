@@ -12,12 +12,6 @@ resource "azurerm_storage_account" "storage-account" {
   )}"
 }
 
-resource "azurerm_storage_container" "vm-images-container" {
-  name                  = local.images_container_name
-  storage_account_name  = azurerm_storage_account.storage-account.name
-  container_access_type = "private"
-}
-
 resource "azurerm_storage_share" "file-share" {
   name                 = "demofileshare"
   storage_account_name =  azurerm_storage_account.storage-account.name
@@ -33,6 +27,12 @@ resource "azurerm_storage_account" "diagnostic-storage-account" {
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
   access_tier              = "Hot"
+}
+
+resource "azurerm_storage_container" "vm-images-container" {
+  name                  = local.images_container_name
+  storage_account_name  = azurerm_storage_account.diagnostic-storage-account.name
+  container_access_type = "private"
 }
 
 resource "null_resource" "copy-assets" {
@@ -55,6 +55,6 @@ resource "null_resource" "copy-vm-images" {
   }
 
   provisioner "local-exec" {
-    command = "az storage blob copy start-batch --destination-container ${azurerm_storage_container.vm-images-container.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-account-key ${var.assets_storage_account_key} --source-container images --pattern *"
+    command = "az storage blob copy start-batch --destination-container ${azurerm_storage_container.vm-images-container.name} --account-name ${azurerm_storage_account.diagnostic-storage-account.name} --account-key ${azurerm_storage_account.diagnostic-storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-account-key ${var.assets_storage_account_key} --source-container images --pattern *"
   }
 }

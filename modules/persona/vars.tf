@@ -154,6 +154,14 @@ variable "_artifactsLocationSasToken" {
   type        = string
 }
 
+variable "images_storage_account" {
+  type ="string"
+}
+
+variable "images_container_access_key" {
+  type ="string"
+}
+
 variable "images_container_uri" {
   type ="string"
 }

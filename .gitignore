@@ -35,3 +35,4 @@ terraform.rc
 /modules/dc/files/gpo/users/SOE - Azure File Share/{6C84A158-775A-4E11-8D4D-B3BDEE20D9C0}/DomainSysvol/GPO/User/Scripts/Logon/AzureFileShareMap.ps1
 /terraform.d/
 /modules/persona/wait-for-images.ps1
+/modules/dc/files/gpo/users/SOE - File Share Mount & Adobe Preferences Copy/DomainSysvol/GPO/User/Scripts/Logon/AzureFileShareMap_AdobePremierePreferences.ps1

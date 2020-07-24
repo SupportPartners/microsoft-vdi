@@ -156,6 +156,8 @@ module "persona-1" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 1 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  images_storage_account      = module.storage.images_storage_account
+  images_container_access_key = module.storage.images_container_access_key
   images_container_uri        = module.storage.images_container_uri
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -194,6 +196,8 @@ module "persona-2" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 2 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  images_storage_account      = module.storage.images_storage_account
+  images_container_access_key = module.storage.images_container_access_key
   images_container_uri        = module.storage.images_container_uri
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
@@ -232,6 +236,8 @@ module "persona-3" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.windows_std_persona == 3 ? local.windows_std_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  images_storage_account      = module.storage.images_storage_account
+  images_container_access_key = module.storage.images_container_access_key
   images_container_uri        = module.storage.images_container_uri
   storage_account             = module.storage.storage_account
   storage_container           = module.storage.storage_container
