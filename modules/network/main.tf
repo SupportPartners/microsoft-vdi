@@ -80,8 +80,7 @@ resource "azurerm_nat_gateway" "nat" {
 
 resource "null_resource" "delay_nat_gateway_association" {
   provisioner "local-exec" {
-    command = "Start-Sleep 1"
-    interpreter = ["PowerShell", "-Command"]
+    command = "sleep 1 || powershell sleep 1"
   }
 
   triggers = {
@@ -110,8 +109,7 @@ resource "azurerm_network_interface" "dc_nic" {
 
 resource "null_resource" "delay_nic_dc" {
   provisioner "local-exec" {
-    command = "Start-Sleep 1"
-    interpreter = ["PowerShell", "-Command"]
+    command = "sleep 1 || powershell sleep 1"
   }
 
   triggers = {
@@ -268,8 +266,7 @@ resource "azurerm_subnet_network_security_group_association" "cac" {
 
 resource "null_resource" "delay_nsg_association_dc" {
   provisioner "local-exec" {
-    command = "Start-Sleep 1"
-    interpreter = ["PowerShell", "-Command"]
+    command = "sleep 1 || powershell sleep 1"
   }
 
   triggers = {
@@ -285,8 +282,7 @@ resource "azurerm_subnet_network_security_group_association" "dc" {
 
 resource "null_resource" "delay_nsg_association_workstation" {
   provisioner "local-exec" {
-    command = "Start-Sleep 1"
-    interpreter = ["PowerShell", "-Command"]
+    command = "sleep 1 || powershell sleep 1"
   }
 
   triggers = {
