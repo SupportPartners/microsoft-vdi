@@ -159,7 +159,7 @@ data "archive_file" "archive-gpo" {
 }
 
 resource "null_resource" "upload-gpo" {
-  depends_on = [null_resource.upload-scripts, archive_file.archive-gpo]
+  depends_on = [null_resource.upload-scripts, data.archive_file.archive-gpo]
 
   triggers = {
     instance_id = azurerm_windows_virtual_machine.domain-controller.id
