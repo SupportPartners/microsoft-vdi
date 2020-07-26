@@ -149,8 +149,17 @@ resource "local_file" "gpo-templates-process" {
     filename    = replace(each.value.vars.tf_file_path, ".template", "")
 }
 
+data "archive_file" "archive-gpo" {
+  depends_on = [local_file.gpo-templates-process]
+
+  type        = "zip"
+  output_path = "${path.module}/gpo.zip"
+
+  source_dir = "${path.module}/files/gpo"
+}
+
 resource "null_resource" "upload-gpo" {
-  depends_on = [null_resource.upload-scripts, local_file.gpo-templates-process]
+  depends_on = [null_resource.upload-scripts, archive_file.archive-gpo]
 
   triggers = {
     instance_id = azurerm_windows_virtual_machine.domain-controller.id
@@ -164,11 +173,6 @@ resource "null_resource" "upload-gpo" {
     port     = "5986"
     https    = true
     insecure = true
-  }
-
-  provisioner "local-exec" {
-    command = "Get-ChildItem -Path ${path.module}/files/gpo | Compress-Archive -DestinationPath ${path.module}/gpo.zip -Force"
-    interpreter = ["PowerShell", "-Command"]
   }
 
   provisioner "file" {
