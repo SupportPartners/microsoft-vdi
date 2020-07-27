@@ -61,6 +61,7 @@ resource "azurerm_template_deployment" "windows" {
     "_artifactsLocationSasToken"  = "${var._artifactsLocationSasToken}"
     "os_disk_uri"                 = "${var.images_container_uri}/win10-2004-NV-19_06img.vhd"
     "data_disk_uri"               = "${var.images_container_uri}/win10-2004-NV-image-19june20disk2.vhd"
+    "pcoip_agent_exe"             = "pcoip-agent-graphics_20.07.0.exe"
     "vmTags"                      = "${jsonencode(merge(var.tags, map(
         "Type", "workstation",
         "OS", "Windows10",
