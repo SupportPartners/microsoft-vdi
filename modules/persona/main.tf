@@ -29,6 +29,25 @@ resource "null_resource" "wait-for-images" {
   }
 }
 
+resource "azurerm_image" "workstation" {
+  depends_on      = [var.vm_depends_on, null_resource.wait-for-images]
+
+  name                = "ARMTemplate-windows-std-image"
+  location            = var.azure_region
+  resource_group_name = var.resource_group_name
+
+  os_disk {
+    os_type  = "Windows"
+    os_state = "Generalized"
+    blob_uri = "${var.images_container_uri}/win10-2004-NV-19_06img.vhd"
+  }
+
+  data_disk {
+    blob_uri = "${var.images_container_uri}/win10-2004-NV-image-19june20disk2.vhd"
+    lun = 0
+  }
+}
+
 resource "azurerm_template_deployment" "windows" {
   count               = var.instance_count
   name                = "ARMTemplate-windows-std-${count.index}"
@@ -59,8 +78,7 @@ resource "azurerm_template_deployment" "windows" {
     "TeradiciRegKey"              = "${var.pcoip_registration_code}"
     "_artifactsLocation"          = "${var._artifactsLocation}"
     "_artifactsLocationSasToken"  = "${var._artifactsLocationSasToken}"
-    "os_disk_uri"                 = "${var.images_container_uri}/win10-2004-NV-19_06img.vhd"
-    "data_disk_uri"               = "${var.images_container_uri}/win10-2004-NV-image-19june20disk2.vhd"
+    image_id                      = azurerm_image.workstation.id
     "pcoip_agent_exe"             = "pcoip-agent-graphics_20.07.0.exe"
     "vmTags"                      = "${jsonencode(merge(var.tags, map(
         "Type", "workstation",
@@ -69,7 +87,7 @@ resource "azurerm_template_deployment" "windows" {
     )))}"
   }
   deployment_mode = "Incremental"
-  depends_on      = [var.vm_depends_on, null_resource.wait-for-images]
+  depends_on      = [var.vm_depends_on, azurerm_image.workstation]
 }
 
 resource "azurerm_template_deployment" "shutdown_schedule_template" {
