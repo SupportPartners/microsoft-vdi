@@ -5,27 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-data "template_file" "wait-for-images-script" {
-  template = file("${path.module}/wait-for-images.ps1.template")
-
-  vars = {
-    img_storage_account_name   = var.images_storage_account
-    img_storage_account_key    = var.images_container_access_key
-  }
-  depends_on      = [var.vm_depends_on]
-}
-
-resource "local_file" "wait-for-images-script-prepare" {
-    content     = data.template_file.wait-for-images-script.rendered
-    filename    = "${path.module}/wait-for-images.ps1"
-}
-
 resource "null_resource" "wait-for-images" {
-  depends_on = [local_file.wait-for-images-script-prepare]
+  depends_on      = [var.vm_depends_on]
 
   provisioner "local-exec" {
-    command = "${path.module}/wait-for-images.ps1"
-    interpreter = ["PowerShell", "-Command"]
+    command = "VdiVhdWatcher --name ${var.images_storage_account} --access-key ${var.images_container_access_key} --blob ${var.os_disk_name} --blob ${var.data_disk_name}"
   }
 }
 
@@ -39,11 +23,11 @@ resource "azurerm_image" "workstation" {
   os_disk {
     os_type  = "Windows"
     os_state = "Generalized"
-    blob_uri = "${var.images_container_uri}/win10-2004-NV-19_06img.vhd"
+    blob_uri = "${var.images_container_uri}/${var.os_disk_name}"
   }
 
   data_disk {
-    blob_uri = "${var.images_container_uri}/win10-2004-NV-image-19june20disk2.vhd"
+    blob_uri = "${var.images_container_uri}/${var.data_disk_name}"
     lun = 0
   }
 }

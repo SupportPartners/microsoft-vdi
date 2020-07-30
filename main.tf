@@ -20,14 +20,16 @@ module "storage" {
 
   resource_group_name        = azurerm_resource_group.vdi_resource_group.name
   deployment_index           = var.deployment_index
-  location                 = var.common_location
+  location                   = var.common_location
   storage_name               = var.storage_name
   is_premium_storage         = var.vm_persona > 1
   diag_storage_name          = var.diag_storage_name
-  file_share_quota         = var.storage_capacity != "" ? var.storage_capacity : 5120
+  file_share_quota           = var.storage_capacity != "" ? var.storage_capacity : 5120
   assets_storage_account     = var.assets_storage_account
   assets_storage_account_key = var.assets_storage_account_key
   assets_storage_container   = var.assets_storage_container
+  os_disk_name               = local.workstation_os_disk_name
+  data_disk_name             = local.workstation_data_disk_name
   tags                       = local.common_tags
 }
 
@@ -156,6 +158,8 @@ module "persona-1" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.vm_persona == 1 ? local.vm_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  os_disk_name                = local.workstation_os_disk_name
+  data_disk_name              = local.workstation_data_disk_name
   images_storage_account      = module.storage.images_storage_account
   images_container_access_key = module.storage.images_container_access_key
   images_container_uri        = module.storage.images_container_uri
@@ -196,6 +200,8 @@ module "persona-2" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.vm_persona == 2 ? local.vm_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  os_disk_name                = local.workstation_os_disk_name
+  data_disk_name              = local.workstation_data_disk_name
   images_storage_account      = module.storage.images_storage_account
   images_container_access_key = module.storage.images_container_access_key
   images_container_uri        = module.storage.images_container_uri
@@ -236,6 +242,8 @@ module "persona-3" {
   host_name                   = var.windows_std_hostname
   instance_count              = var.vm_persona == 3 ? local.vm_count : 0
   pcoip_agent_location        = var.pcoip_agent_location
+  os_disk_name                = local.workstation_os_disk_name
+  data_disk_name              = local.workstation_data_disk_name
   images_storage_account      = module.storage.images_storage_account
   images_container_access_key = module.storage.images_container_access_key
   images_container_uri        = module.storage.images_container_uri

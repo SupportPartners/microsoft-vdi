@@ -170,4 +170,12 @@ variable "tags" {
   description = "Common tags for storage resource"
 }
 
+variable "os_disk_name" {
+  type = "string"
+}
+
+variable "data_disk_name" {
+  type = "string"
+}
+
 variable "vm_depends_on" {}

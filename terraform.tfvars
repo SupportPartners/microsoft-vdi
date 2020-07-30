@@ -26,6 +26,7 @@ assets_storage_container      = "azurefsstd"
 _artifactsLocation            = "https://teradicisa.blob.core.windows.net/teradicisacontainer/"
 _artifactsLocationSasToken    = ""
 environment                   = "VDI Demo"
+vhd_images_version            = "1.0"
 
 # Leave the following blank, they are only filled when using Azure Key Vault secrets
 application_id                = ""

@@ -239,20 +239,27 @@ variable "cam_service_token" {
   description = "Terradici Cloud Access Manager Service Token"
 }
 
+variable "vhd_images_version" {
+  type    = "string"
+  description = "VHD version"
+}
+
 locals {
-  dc_virtual_machine_name  = "vm-vdi-dc${var.deployment_index}"
-  cac_virtual_machine_name = "vm-vdi-cac${var.deployment_index}"
-  common_tags              = "${map(
+  dc_virtual_machine_name    = "vm-vdi-dc${var.deployment_index}"
+  cac_virtual_machine_name   = "vm-vdi-cac${var.deployment_index}"
+  workstation_os_disk_name   = "win10-2004-NV-OS-${var.vhd_images_version}.vhd"
+  workstation_data_disk_name = "win10-2004-NV-DATA-${var.vhd_images_version}.vhd"
+  common_tags                = "${map(
     "Created Date", "${formatdate("MMM DD, YYYY", time_static.date_creation.id)}",
     "Environment", "${var.environment}",
     "Client Name", "${var.client_name}",
     "Createdby", "Supportpartners"
   )}"
-  vm_count                 = length(csvdecode(file("${path.root}/domain_users_list.csv")))
-  vm_names                 = {
-                               1 = "vmWin10Nv6"
-                               2 = "vmWin10Nv12"
-                               3 = "vmWin10Nv24"
-                             }
-  workstations             = concat(module.persona-1.workstations, module.persona-2.workstations, module.persona-3.workstations)
+  vm_count                   = length(csvdecode(file("${path.root}/domain_users_list.csv")))
+  vm_names                   = {
+                                 1 = "vmWin10Nv6"
+                                 2 = "vmWin10Nv12"
+                                 3 = "vmWin10Nv24"
+                               }
+  workstations               = concat(module.persona-1.workstations, module.persona-2.workstations, module.persona-3.workstations)
 }

@@ -42,6 +42,14 @@ variable "assets_storage_container" {
   type        = string
 }
 
+variable "os_disk_name" {
+  type = "string"
+}
+
+variable "data_disk_name" {
+  type = "string"
+}
+
 variable "tags" {
   description = "Common tags for storage resource"
 }
