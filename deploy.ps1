@@ -85,6 +85,13 @@ Function DownloadTerraformPlugins([string] $directory)
     Invoke-WebRequest -Uri $uri -OutFile "$path/${name}"
 }
 
+Function DownloadTools([string] $directory)
+{
+    $vdiwatcheruri = "https://azdemostdstore.blob.core.windows.net/tools/VdiVhdWatcher-win-amd64-1.0.exe"
+    $vdiwatcherpath = Join-Path $directory "VdiVhdWatcher.exe"
+    $wc.DownloadFile($vdiwatcheruri, $vdiwatcherpath)
+}
+
 Function CreateUsers
 {
     if ((Test-Path ".\domain_users_list.csv") -eq $False) {
@@ -133,6 +140,7 @@ New-Item -Path . -Name $tfvars_file -ItemType "file" -Force -Value $vars
 
 DownloadTerraform($repo_directory)
 DownloadTerraformPlugins($repo_directory)
+DownloadTools($repo_directory)
 
 .\terraform.exe init
 .\terraform.exe apply -var-file="$tfvars_file"
