@@ -33,7 +33,7 @@ variable "assets_storage_account" {
 }
 
 variable "assets_storage_account_key" {
-  type    = "string"
+  type    = string
   description = "Access key for storage account containing demo assets and VM images"
 }
 

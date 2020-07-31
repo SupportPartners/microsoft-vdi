@@ -17,7 +17,6 @@ cac_machine_type              = "Standard_D2s_v3"
 cac_disk_size_gb              = "50"
 cac_installer_url             = "https://teradici.bintray.com/cloud-access-connector/cloud-access-connector-0.1.1.tar.gz"
 golden_image_id               = "/subscriptions/c28be9ee-97ed-4251-ab14-43090bbc3d4e/resourceGroups/SP-VDI-graph/providers/Microsoft.Compute/galleries/sig_vdi/images/image-definition-vdi/versions/0.0.3"
-windows_std_vm_size           = "Standard_B2ms"
 windows_std_hostname          = "windows-std-workstation"
 vm_persona                    = 1
 assets_storage_account        = "stmsoftdemostoreprod"

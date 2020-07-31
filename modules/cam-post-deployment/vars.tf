@@ -1,25 +1,25 @@
 variable "cam_service_token" {
-  type    = "string"
+  type    = string
 }
 
 variable "cam_deployment_id" {
-  type    = "string"
+  type    = string
 }
 
 variable "cam_connector_name" {
-  type    = "string"
+  type    = string
 }
 
 variable "azure_subscription_id" {
-  type = "string"
+  type = string
 }
 
 variable "azure_resource_group" {
-  type = "string"
+  type = string
 }
 
 variable "vm_name" {
-  type = "string"
+  type = string
 }
 
 variable "vm_count" {

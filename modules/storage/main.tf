@@ -6,10 +6,9 @@ resource "azurerm_storage_account" "storage-account" {
   account_replication_type = "LRS"
   account_kind             = var.is_premium_storage == true ? "FileStorage" : "StorageV2"
   access_tier              = "Hot"
-  tags                     = "${merge(
-    var.tags,
+  tags                     = merge(var.tags,
     map("Type", "Storage")
-  )}"
+  )
 }
 
 resource "azurerm_storage_share" "file-share" {

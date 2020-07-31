@@ -22,7 +22,7 @@ resource "azurerm_subnet" "cac" {
   address_prefix       = var.cac_subnet_cidr
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vdi_virtual_network.name
-  depends_on           = ["azurerm_subnet.dc"]
+  depends_on           = [azurerm_subnet.dc]
 }
 
 resource "azurerm_subnet" "workstation" {
@@ -30,7 +30,7 @@ resource "azurerm_subnet" "workstation" {
   address_prefix       = var.ws_subnet_cidr
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vdi_virtual_network.name
-  depends_on           = ["azurerm_subnet.cac"]
+  depends_on           = [azurerm_subnet.cac]
 }
 
 resource "azurerm_public_ip" "dc_ip" {
@@ -91,7 +91,7 @@ resource "null_resource" "delay_nat_gateway_association" {
 resource "azurerm_subnet_nat_gateway_association" "nat" {
   subnet_id      = azurerm_subnet.workstation.id
   nat_gateway_id = azurerm_nat_gateway.nat.id
-  depends_on     = ["null_resource.delay_nat_gateway_association"]
+  depends_on     = [null_resource.delay_nat_gateway_association]
 }
 
 resource "azurerm_network_interface" "dc_nic" {
@@ -128,7 +128,7 @@ resource "azurerm_network_interface" "cac" {
     public_ip_address_id          = azurerm_public_ip.cac.id
     subnet_id                     = azurerm_subnet.cac.id
   }
-  depends_on = ["null_resource.delay_nic_dc"]
+  depends_on = [null_resource.delay_nic_dc]
 }
 
 resource "azurerm_private_dns_zone" "dns" {
@@ -277,7 +277,7 @@ resource "null_resource" "delay_nsg_association_dc" {
 resource "azurerm_subnet_network_security_group_association" "dc" {
   subnet_id                 = azurerm_subnet.dc.id
   network_security_group_id = azurerm_network_security_group.nsg.id
-  depends_on                = ["null_resource.delay_nsg_association_dc"]
+  depends_on                = [null_resource.delay_nsg_association_dc]
 }
 
 resource "null_resource" "delay_nsg_association_workstation" {
@@ -286,12 +286,12 @@ resource "null_resource" "delay_nsg_association_workstation" {
   }
 
   triggers = {
-    "before" = "${azurerm_subnet_network_security_group_association.dc.id}"
+    "before" = azurerm_subnet_network_security_group_association.dc.id
   }
 }
 
 resource "azurerm_subnet_network_security_group_association" "workstation" {
   subnet_id                 = azurerm_subnet.workstation.id
   network_security_group_id = azurerm_network_security_group.nsg.id
-  depends_on                = ["null_resource.delay_nsg_association_workstation"]
+  depends_on                = [null_resource.delay_nsg_association_workstation]
 }

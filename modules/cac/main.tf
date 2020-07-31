@@ -91,7 +91,7 @@ resource "null_resource" "cac-startup-script" {
 
 resource "azurerm_template_deployment" "shutdown_schedule_template" {
   name                = "${azurerm_virtual_machine.cac.name}-shutdown-schedule-template"
-  resource_group_name = "${var.resource_group_name}"
+  resource_group_name = var.resource_group_name
   deployment_mode     = "Incremental"
 
   parameters = {

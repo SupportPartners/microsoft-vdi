@@ -278,7 +278,7 @@ resource "null_resource" "wait-for-reboot" {
 
 resource "azurerm_template_deployment" "shutdown_schedule_template" {
   name                = "${azurerm_windows_virtual_machine.domain-controller.name}-shutdown-schedule-template"
-  resource_group_name = "${var.resource_group_name}"
+  resource_group_name = var.resource_group_name
   deployment_mode     = "Incremental"
 
   parameters = {

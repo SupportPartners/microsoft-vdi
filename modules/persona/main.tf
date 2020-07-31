@@ -36,7 +36,7 @@ resource "azurerm_template_deployment" "windows" {
   count               = var.instance_count
   name                = "ARMTemplate-windows-std-${count.index}"
   resource_group_name = var.resource_group_name
-  template_body       = "${file("${path.module}/mainTemplate.json")}"
+  template_body       = file("${path.module}/mainTemplate.json")
   parameters = {
     "base_name"                   = "${var.base_name}"
     "count_index"                 = "${format("%02d", count.index + 1)}"

@@ -211,7 +211,7 @@ variable "assets_storage_account" {
 }
 
 variable "assets_storage_account_key" {
-  type    = "string"
+  type    = string
   description = "Access key for storage account containing demo assets and VM images"
 }
 
@@ -230,12 +230,12 @@ variable "_artifactsLocationSasToken" {
 }
 
 variable "cam_deployement_id" {
-  type    = "string"
+  type    = string
   description = "Terradici Cloud Access Manager Deployment Id"
 }
 
 variable "cam_service_token" {
-  type    = "string"
+  type    = string
   description = "Terradici Cloud Access Manager Service Token"
 }
 
