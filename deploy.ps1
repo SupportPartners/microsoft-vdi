@@ -75,6 +75,7 @@ Function DownloadTerraformPlugins([string] $directory)
 
     # Invoke-WebRequest -Uri "https://github.com/Mastercard/terraform-provider-restapi/releases/download/v1.13.0/terraform-provider-restapi_v1.13.0-windows-amd64" -OutFile "$path/terraform-provider-restapi_v1.13.0-windows-amd64"
     $name = "terraform-provider-restapi_v1.13.0-${os}-${arch}"
+    $localName = "terraform-provider-restapi_v1.13.0"
     $uri = "https://github.com/Mastercard/terraform-provider-restapi/releases/download/v${restApiProviderVersion}/${name}"
     $path = "${directory}/terraform.d/plugins/windows_amd64"
 
@@ -82,7 +83,7 @@ Function DownloadTerraformPlugins([string] $directory)
     {
         New-Item -ItemType Directory -Force -Path $path
     }
-    Invoke-WebRequest -Uri $uri -OutFile "$path/${name}"
+    Invoke-WebRequest -Uri $uri -OutFile "$path/${localName}"
 }
 
 Function DownloadTools([string] $directory)
