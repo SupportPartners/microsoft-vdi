@@ -240,7 +240,7 @@ variable "cam_service_token" {
 }
 
 variable "vhd_images_version" {
-  type    = "string"
+  type    = string
   description = "VHD version"
 }
 
