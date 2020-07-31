@@ -9,7 +9,7 @@ resource "null_resource" "wait-for-images" {
   depends_on      = [var.vm_depends_on]
 
   provisioner "local-exec" {
-    command = "VdiVhdWatcher --name ${var.images_storage_account} --access-key ${var.images_container_access_key} --blob ${var.os_disk_name} --blob ${var.data_disk_name}"
+    command = "VdiVhdWatcher --name ${var.images_storage_account} --container vdidemoimageprod --access-key ${var.images_container_access_key} --blob ${var.os_disk_name} --blob ${var.data_disk_name}"
   }
 }
 
