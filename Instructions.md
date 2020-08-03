@@ -1,7 +1,3 @@
-# VDI - github - README v3.1
-
-
-
 # Azure Creative Cloud VDI Infrastructure
 
 Click to deploy Azure environment with guidance, designed to provide Creative Cloud Desktops in a client's existing or new subscription. Using a set of custom tools clients will be able to deploy a customisable Creative Desktops in Azure Infrastructure for up to five users in a single region with shared storage. This provides a client with a minimal commitment but viable solution for testing or small-scale use.
