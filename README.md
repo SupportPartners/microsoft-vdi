@@ -62,16 +62,16 @@ Create the CAM service account
 * Enter a friendly name for the account and click ‘CREATE’
 * Ensure you make a note of the **Username** and the **API key** when presented. You will require this later.
 
-**string: Example Only**
+  **string: Example Only**
 {"keyId":"5f1021ef7240ed006725918b","username":"**5f1021ef7240ed006725918b**","apiKey":"**eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJvaWQiOiI1ZjBjYTcwY2M4NmI1YzAwMTJkYWVjYmQiLCJvd25lck9pJYR6IjE5Zjk5M2NjLTdlYTctNDJkNS1iYTc1LTA5OTY0MWJmYjg3OCIsImp0aSI6Ijk1ZDJmMDhlLWI2YTktNGZiNC05Y2Q5LWZiM2JkZDU5YTYxOSIsImlhdCI6MTU5NDg5Mjc4NSwiZXhwIjoxNjg5NTAwNzg1fQ.1X62a0wha-yq0xeWzkxO3GkLSDa2TRdioWYL1dHMIDNC15dmspIZP7vfFdaq8PmAJnefS_kT6SULPM0—QwPpA**","keyName":"TestDeploy"}
 
-From the API String copied out of the CAM portal you need to only use the sections highlighted in **bold** above
+  From the API String copied out of the CAM portal you need to only use the sections highlighted in **bold** above
 
-**Example of how to format information for use within the Deploy script:**
+  **Example of how to format information for use within the Deploy script:**
 
-**Username: Example Only** `5f1021ef7240ed006725918b`
+  **Username: Example Only** `5f1021ef7240ed006725918b`
 
-**API key: Example Only**
+  **API key: Example Only**
 `eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJvaWQiOiI1ZjBjYTcwY2M4NmI1YzAwMTJkYWVjYmQiLCJvd25lck9pJYR6IjE5Zjk5M2NjLTdlYTctNDJkNS1iYTc1LTA5OTY0MWJmYjg3OCIsImp0aSI6Ijk1ZDJmMDhlLWI2YTktNGZiNC05Y2Q5LWZiM2JkZDU5YTYxOSIsImlhdCI6MTU5NDg5Mjc4NSwiZXhwIjoxNjg5NTAwNzg1fQ.1X62a0wha-yq0xeWzkxO3GkLSDa2TRdioWYL1dHMIDNC15dmspIZP7vfFdaq8PmAJnefS_kT6SULPM0—QwPpA`
 
 
@@ -89,7 +89,9 @@ The script will utilise the Azure CLI to authenticate you to your subscription. 
 You have the choice of 3 scripts depending on which Persona you choose the relevent resources will be deployed. You can see what will be deployed for each persona in [PersonaDetails.md](https://github.com/SupportPartners/microsoft-vdi/blob/master/PeronaDetails.md)
 
 Persona1 - https://github.com/SupportPartners/microsoft-vdi/raw/master/scripts/persona-1.ps1
+
 Persona2 - https://github.com/SupportPartners/microsoft-vdi/raw/master/scripts/persona-2.ps1
+
 Persona3 - https://github.com/SupportPartners/microsoft-vdi/raw/master/scripts/persona-3.ps1
 
 Copy the script to C:\temp to avoid character limits
