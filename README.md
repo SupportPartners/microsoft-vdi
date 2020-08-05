@@ -76,9 +76,15 @@ From the API String copied out of the CAM portal you need to only use the sectio
 eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJvaWQiOiI1ZjBjYTcwY2M4NmI1YzAwMTJkYWVjYmQiLCJvd25lck9pJYR6IjE5Zjk5M2NjLTdlYTctNDJkNS1iYTc1LTA5OTY0MWJmYjg3OCIsImp0aSI6Ijk1ZDJmMDhlLWI2YTktNGZiNC05Y2Q5LWZiM2JkZDU5YTYxOSIsImlhdCI6MTU5NDg5Mjc4NSwiZXhwIjoxNjg5NTAwNzg1fQ.1X62a0wha-yq0xeWzkxO3GkLSDa2TRdioWYL1dHMIDNC15dmspIZP7vfFdaq8PmAJnefS_kT6SULPM0—QwPpA
 
 
+**Install Azure CLI on the machine used to run the deployment script**
+
+The script will utilise the Azure CLI to authenticate you to your subscription. You can install the CLI using Microsoft Documentation https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest&tabs=azure-cli
+
 ## Deployment
 
-**Download the deployment script here** https://github.com/SupportPartners/microsoft-vdi
+**Download the deployment script here** https://github.com/SupportPartners/microsoft-vdi/scripts
+
+You have the choice of 3 scripts depending on which Persona you choose the relevent resources will be deployed. You can see what will be deployed for each persona in PersonaDetails.md
 
 **Run the script from a Powershell run as current logged in user**
 
@@ -86,13 +92,11 @@ NOTE: This script cannot be situated too deep within subfolders else the script 
 
 `C:\path\to\deploy.ps1`
 
+Resources for the deployment will be downloaded from GitHub into the current working directory.
+
+**Authenticate to Azure**
 
 You will be prompted to log into your Microsoft Azure account. This should be an account that has the correct permissions to create resources in the destination subscription.
-
-NEED TO PUT SOMETHING IN HERE THAT THE SCRIPT WILL PULL DOWN TERAFORM IF YOU DO NOT HAVE IT
-
-
-DO YOU NEED TO PUT SOMETHING IN HERE REGARDING HOW TO DEPLOY THE DIFFERENT PERSONAS?
 
 Once authenticated you will be asked which subscription you wish to deploy.
 
@@ -156,7 +160,6 @@ Enter a value:<storage account key>
 ```
 
 
-
 **Enter a password for the Cloud Access Connector Local Administrator account**
 
 This will be the password for the Cloud Access Connector Administrator account (CACadmin)
@@ -167,6 +170,17 @@ var.cac_admin_password
 
   Enter a value:<password>
 ```
+
+**Enter Client name for tags**
+
+This needs description
+
+```
+var.client_name
+  Client name for tags. User entry
+
+  Enter a value:
+  ```
 
 **Enter the Azure Region where you would like to deploy the resources**
 
@@ -189,6 +203,17 @@ var.safe_mode_admin_password
   Safe Mode Admin Password (Directory Service Restore Mode - DSRM)
 
   Enter a value:<password>
+```
+
+**Enter the desired capacity of the Azure file share in GiB**
+
+This need description
+
+```
+var.storage_capacity
+  Provisioned capacity of file share in GiB. Possible values 100-102400. Default is 5120 Gib
+
+  Enter a value:
 ```
 
 **Enter a password for the Local Administrator account of the deployed workstations**
