@@ -106,7 +106,7 @@ Once authenticated you will be asked which subscription you wish to deploy.
 
 **You’ll be prompted for the CAM Service account credentials gathered in the CAM pre-requisite**
 
-* Enter the **username **and hit return
+* Enter the **username** and hit return
 * Enter the **API Key** and hit return
 
 
@@ -133,7 +133,9 @@ You will be asked if you’d like to create a user account. Each user account cr
 `Prompt: Do you want to add a user? n`
 
 
-**Enter your chosen password for the Active Directory Administrator account**
+**Enter a password for the Active Directory Administrator account**
+
+This will be the password for the Active Directory Administrator account (ADadmin)
 
 ```
 var.ad_admin_password
@@ -155,7 +157,9 @@ Enter a value:<storage account key>
 
 
 
-**Enter your chosen password for the Cloud Access Connector Local Administrator account**
+**Enter a password for the Cloud Access Connector Local Administrator account**
+
+This will be the password for the Cloud Access Connector Administrator account (CACadmin)
 
 ```
 var.cac_admin_password
@@ -167,6 +171,8 @@ var.cac_admin_password
 **Enter the Azure Region where you would like to deploy the resources**
 
 Example below is for Northen Europe, please refer to the list for the corresponding region. [Azure Region List](https://github.com/SupportPartners/microsoft-vdi/blob/master/Azurerregionlist.txt)
+
+Supported regions can be found [above](https://github.com/SupportPartners/microsoft-vdi#region-availability)
 ```
 var.location
   The Azure Region in which all resources in this example should be created.
@@ -176,6 +182,8 @@ var.location
 
 **Enter your chosen password for the Directory Services Restore Mode**
 
+This will be the password for the Active Directory DSRM
+
 ```
 var.safe_mode_admin_password
   Safe Mode Admin Password (Directory Service Restore Mode - DSRM)
@@ -184,6 +192,8 @@ var.safe_mode_admin_password
 ```
 
 **Enter your chosen password for the Local Administrator account of the deployed workstations**
+
+This will be the password for the Local Administrator account (WINadmin) for each of the deployed user workstations
 
 ```
 var.windows_std_admin_password
