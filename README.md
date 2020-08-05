@@ -84,9 +84,16 @@ The script will utilise the Azure CLI to authenticate you to your subscription. 
 
 ## Deployment
 
+**Install Azure CLI on the machine used to run the deployment script**
+
+The script will utilise the Azure CLI to authenticate you to your subscription. You can install the CLI using Microsoft Documentation https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest&tabs=azure-cli
+
 **Download the deployment script here** https://github.com/SupportPartners/microsoft-vdi/tree/master/scripts
 
 You have the choice of 3 scripts depending on which Persona you choose the relevent resources will be deployed. You can see what will be deployed for each persona in [PersonaDetails.md](https://github.com/SupportPartners/microsoft-vdi/blob/master/PeronaDetails.md)
+
+Download link here, here and here.
+Download to C:\temp
 
 **Run the script from a Powershell run as current logged in user**
 
@@ -99,7 +106,7 @@ This includes Teraform and the dependancies required for deployment.
 
 **Authenticate to Azure**
 
-You will be prompted to log into your Microsoft Azure account. This should be an account that has the correct permissions to create resources in the destination subscription.
+You may be prompted to log into your Microsoft Azure account. If you have authenticated previously you will not be prompted. This should be an account that has the correct permissions to create resources in the destination subscription.
 
 Once authenticated you will be asked which subscription you wish to deploy.
 
@@ -210,7 +217,9 @@ var.safe_mode_admin_password
 
 **Enter the desired capacity of the Azure file share in GiB**
 
-Set the size of the Azure Files volume that will be created as part of the deployment. To achieve the desired performance recommended value of 2TiB
+Set the size of the Azure Files volume that will be created as part of the deployment. 
+
+To achieve the desired performance recommended value of 2TiB (2048)
 
 ```
 var.storage_capacity
@@ -266,8 +275,6 @@ On completion the script will output the following:
 2. If Internet Explorer has never been run from the workstation you are running the script you will received the following error:
 
 *ERROR: The response content cannot be parsed because the Internet Explorer engine is not available*
-
-NEED TO ADD IN THE ERROR MESSAGE YOU WILL GET IF THERE ARE NOT ENOUGH CORES AVAL IN THE SUBSCRIPTION AND THE RESOLUTION TO THAT
 
 ## Testing the deployment has been successful
 
@@ -343,9 +350,10 @@ under ‘**Source IP address**’ add the IP ensuring that you separate any addi
 
 * Support Partners - [https://www.support-partners.com](https://www.support-partners.com/)
 
-NEED TO ADD IN SECTION HERE OUTLINING THAT THESE SCRIPTS ARE PROVIDED FOR TESTING PURPOSES ONLY AND SHOULD NOT BE DEPLOYED IN THERE CURRENT FORM TO PRODUCTION OR USED IN A PRODUCTION ENVIRONMENT
 
 ## License
+
+THESE SCRIPTS ARE PROVIDED FOR TESTING PURPOSES ONLY AND SHOULD NOT BE DEPLOYED IN THERE CURRENT FORM TO PRODUCTION OR USED IN A PRODUCTION ENVIRONMENT
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
