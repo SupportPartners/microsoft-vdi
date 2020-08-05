@@ -161,15 +161,13 @@ cam_service_token           = `"$($deployment.token)`"
 
 resource_group_name      = `"`"
 deployment_index         = `"003`"
-common_location          = `"northeurope`"
 storage_name             = `"vdidemo`"
 diag_storage_name        = `"vdidemo`"
 
 ad_admin_username        = `"ADadmin`"
 cac_admin_username          = `"CACadmin`"
 windows_std_admin_username  = `"WINadmin`"
-vm_persona                  = 3
-client_name                 = `"Client`""
+vm_persona                  = 3"
 
 DownloadProject
 
