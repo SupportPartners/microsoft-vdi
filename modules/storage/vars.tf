@@ -43,11 +43,11 @@ variable "assets_storage_container" {
 }
 
 variable "os_disk_name" {
-  type = "string"
+  type = string
 }
 
 variable "data_disk_name" {
-  type = "string"
+  type = string
 }
 
 variable "tags" {
