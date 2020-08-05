@@ -45,9 +45,6 @@ There are a number of prerequisites you must have to successfully deploy this in
 * In order to proceed with the deployment a valid Teradici subscription should be active.
 * If you require to purchase a subscription visit their website here (link).
 * Teradici will provide a registration code which will be utilised in the deployment, ensure you have this to hand
-* **Ensure internet explorer has been run at least once and the initial setup prompt has been actioned on the machine the Deploy script is run from.**
-* Ensure Powershell execution polices have been set to allow the script the run [https:/go.microsoft.com/fwlink/?LinkID=135170](https://go.microsoft.com/fwlink/?LinkID=135170). Example:  *Set-ExecutionPolicy -ExecutionPolicy Unrestricted*
-
 
 **Pre-requisites: Storage Account Key**
 
@@ -78,11 +75,10 @@ From the API String copied out of the CAM portal you need to only use the sectio
 `eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJvaWQiOiI1ZjBjYTcwY2M4NmI1YzAwMTJkYWVjYmQiLCJvd25lck9pJYR6IjE5Zjk5M2NjLTdlYTctNDJkNS1iYTc1LTA5OTY0MWJmYjg3OCIsImp0aSI6Ijk1ZDJmMDhlLWI2YTktNGZiNC05Y2Q5LWZiM2JkZDU5YTYxOSIsImlhdCI6MTU5NDg5Mjc4NSwiZXhwIjoxNjg5NTAwNzg1fQ.1X62a0wha-yq0xeWzkxO3GkLSDa2TRdioWYL1dHMIDNC15dmspIZP7vfFdaq8PmAJnefS_kT6SULPM0—QwPpA`
 
 
-**Install Azure CLI on the machine used to run the deployment script**
-
-The script will utilise the Azure CLI to authenticate you to your subscription. You can install the CLI using Microsoft Documentation https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest&tabs=azure-cli
-
 ## Deployment
+
+**Ensure internet explorer has been run at least once and the initial setup prompt has been actioned on the machine the Deploy script is run from.**
+* Ensure Powershell execution polices have been set to allow the script the run [https:/go.microsoft.com/fwlink/?LinkID=135170](https://go.microsoft.com/fwlink/?LinkID=135170). Example:  *Set-ExecutionPolicy -ExecutionPolicy Unrestricted*
 
 **Install Azure CLI on the machine used to run the deployment script**
 
