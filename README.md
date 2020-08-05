@@ -1,14 +1,38 @@
-# Azure Creative Cloud VDI Infrastructure
+# Azure Creative Cloud VDI Infrastructure 
 
-
-Click to deploy Azure environment with guidance, designed to provide Creative Cloud Desktops in a client's existing or new subscription. Using a set of custom tools clients will be able to deploy a customisable Creative Desktops in Azure Infrastructure for up to five users in a single region with shared storage. This provides a client with a minimal commitment but viable solution for testing or small-scale use.
+Click to deploy Azure environment with guidance, designed to provide Adobe Creative Cloud Desktops in a client's existing or new Microsoft Azure subscription. Using a set of custom tools clients will be able to deploy a customisable Creative Desktops in Azure Infrastructure for up to five users in a single region with shared storage. This provides a client with a minimal commitment but viable solution for testing or small-scale use.
 
 ## Getting Started
 
-These instructions will help you deploy Creative Cloud desktop infrastructure environments within Azure.  By providing a simple repeatable approach, teams can deliver Creative Cloud desktop infrastructure quickly and efficiently, tailored to defined personas in the creative industry.
+These instructions will help you deploy an Adobe Creative Cloud desktop infrastructure environments within Azure.  By providing a simple repeatable approach, teams can deliver Creative Cloud desktop infrastructure quickly and efficiently, tailored to defined personas in the creative industry.
 
 The deployment process will deploy end user workstations up to a maximum of 5 based upon how many users are specified during this process.
 
+|Persona Name	|Persona	|Resolution	|Codecs	|Estimated disk bandwidth required per simultaneous user	|Azure Instance type	|Azure File Storage	|
+|---	|---	|---	|---	|---	|---	|---	|
+|Persona1	|News/Sports/Events/Digital	|Up to 1080i30 (1920X1080)	|XDCAM-50	|170 Mbps	|Standard_NV6	|Standard	|
+|Persona2	|Advertising/Broadcasters/Studios	|Up to 1080i60 (1920X1080)	|DNxHD 145 DNxHR SQ or ProRes 422 ProRes HQ     |340 Mbps	|Standard_NV12s_v3	|Premium	|
+|Persona3	|Promos/High-end Advertising	|Up to 1080i60	|DNxHD 145  DNxHR SQ or ProRes 422 ProRes HQ	|450 Mbps	|Standard_NV24s_v3	|Premium	|
+
+## Region Availability
+
+|Virtual Machine	|Central US	|East US	|East US 2	|North Central US	|South Central US	|West Central US	|West US	|West US 2	|North Europe	|West Europe	|UK South2	|UK West3	|France Central	|France South	|
+|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|---	|
+|NV-series (Persona 1)	|No	|Yes	|Yes	|Yes	|Yes	|No	|Yes	|Yes	|Yes	|Yes	|Yes	|No	|No	|No	|
+|NVv3-series (Persona 2 or 3)	|No	|Yes	|Expected Q3 2020	|No	|Yes	|No	|Yes	|Yes	|Yes	|Yes	|Yes	|No	|Expected Q4 2020	|No	|
+
+
+## What does this Deploy
+
+Using a number of scripts this will deploy the following infrastructure in a self contained Azure Resource Group in your own Azure subscription depending on the options you choose during deployment:
+
+* Teradici Cloud Access Connector
+* Connection to Teradici Cloud Access Manager
+* An Active Directory Server
+* Custom VDI Azure Log Analytics
+* Up to 5 Adobe Creative Cloud Virtual Cloud workstations from a fully optimised and tested image
+* An Azure Standard or Premium File Share up to 20TB in size
+* Demo projects and media on the Azure File Share ready for testing
 
 ## Prerequisites
 
@@ -29,7 +53,7 @@ There are a number of prerequisites you must have to successfully deploy this in
 * In order to access the demo assets and VM image, the script will request a storage key- this will be provided to you by Microsoft. You will be unable to successfully deploy the demo resources without this key. Please ensure you have this key available prior to deploying the script.
 
 
-**CAM Pre-requisite: **
+**CAM Pre-requisite:**
 Create the CAM service account
 
 * Go to [https://cam.teradici.com](https://cam.teradici.com/) and log in
@@ -54,7 +78,7 @@ eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJvaWQiOiI1ZjBjYTcwY2M4NmI1YzAwMTJkYWVjYmQ
 
 ## Deployment
 
-**Download the deployment script here** (GitHub link goes here)
+**Download the deployment script here** https://github.com/SupportPartners/microsoft-vdi
 
 **Run the script from a Powershell run as current logged in user**
 
@@ -64,6 +88,11 @@ NOTE: This script cannot be situated too deep within subfolders else the script 
 
 
 You will be prompted to log into your Microsoft Azure account. This should be an account that has the correct permissions to create resources in the destination subscription.
+
+NEED TO PUT SOMETHING IN HERE THAT THE SCRIPT WILL PULL DOWN TERAFORM IF YOU DO NOT HAVE IT
+
+
+DO YOU NEED TO PUT SOMETHING IN HERE REGARDING HOW TO DEPLOY THE DIFFERENT PERSONAS?
 
 Once authenticated you will be asked which subscription you wish to deploy.
 
@@ -163,9 +192,10 @@ var.windows_std_admin_password
 ```
 
 
-You’ll now be asked if you’d like to proceed. From this point on, objects will begin to be created in your Azure subscription.
+You’ll now be asked if you’d like to proceed. From this point on, objects will begin to be created in your Azure subscription in a single Resource Group.
 
-By scrolling up the output, the script will indicate the number of resources that will be created as part of the deployment- for example the below excerpt indicates that the deployment will create 57 resources, change 0 resources and destroy (delete) 0 resources- this is typical of a new deployment. 
+By scrolling up the output, the script will indicate the number of resources that will be created as part of the deployment- for example the below excerpt indicates that the deployment will create 65 resources, change 0 resources and destroy (delete) 0 resources- this is typical of a new deployment. 
+
 Although the number or resources added will depend on the version of the script run, the number of items listed under ‘change’ or ‘destroy’ in a new deployment will be 0.
 
 ![Plan](Images/Plan.png)
@@ -190,14 +220,15 @@ On completion the script will output the following:
 
 ## Errors with resource creation
 
-If the resource required is not available in the region selected you will see an error resembling the following:
+1. If the resource required is not available in the region selected you will see an error resembling the following:
 
 ![Plan](Images/Error.png)
 
-If Internet Explorer has never been run from the workstation you are running the script you will received the following error:
+2. If Internet Explorer has never been run from the workstation you are running the script you will received the following error:
 
 *ERROR: The response content cannot be parsed because the Internet Explorer engine is not available*
 
+NEED TO ADD IN THE ERROR MESSAGE YOU WILL GET IF THERE ARE NOT ENOUGH CORES AVAL IN THE SUBSCRIPTION AND THE RESOLUTION TO THAT
 
 ## Testing the deployment has been successful
 
@@ -211,12 +242,16 @@ Please note that once the script has completed, the Teradici connector can take 
 
 Make note of your **External IP **that has been allocated to the connector. You’ll need this to connect to a workstation in the next section
 
+ADD EXAMPLE PICTURE IN HERE
+
 **Check the Teradici workstation(s):**
 
 Go to https://cam.teradici.com/app/remoteWorkstations
 
 The deployed workstation(s) should be listed. They should be marked as managed and running.
 When you click on a workstation it should list the users authorised (assigned) to use that workstation under the heading **MANAGE USER ENTITLEMENTS FOR WORKSTATION**
+
+ADD EXAMPLE PICTURE IN HERE
 
 By design, there is a one-to-one mapping between users and workstations. For example; if 3 users are requested during the script deployment, 3 machines will be also created, one workstation for each user created. You will be able to review user/ workstation assignments here.
 
@@ -269,6 +304,8 @@ under ‘**Source IP address**’ add the IP ensuring that you separate any addi
 
 * Support Partners - [https://www.support-partners.com](https://www.support-partners.com/)
 
+NEED TO ADD IN SECTION HERE OUTLINING THAT THESE SCRIPTS ARE PROVIDED FOR TESTING PURPOSES ONLY AND SHOULD NOT BE DEPLOYED IN THERE CURRENT FORM TO PRODUCTION OR USED IN A PRODUCTION ENVIRONMENT
+
 ## License
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -285,7 +322,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 ## Acknowledgments
 
 * Teradici - GitHub https://github.com/teradici
-* 
 
 
 
