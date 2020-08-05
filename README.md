@@ -114,7 +114,7 @@ Password for the Adminstrator user
 ```
 
 
-**Enter the Access Key for the Storage Account (please see: [Pre-requisites: Storage Account Key](https://quip.com/ZkTLALODGE4h#CZSACAltRjZ) ).**
+**Enter the Access Key for the Storage Account (please see: [Pre-requisites: Storage Account Key](https://github.com/SupportPartners/microsoft-vdi/blob/3.2/README.md#prerequisites ).**
 
 
 ```
