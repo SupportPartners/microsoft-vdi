@@ -152,7 +152,7 @@ Password for the Adminstrator user
 ```
 
 
-**Enter the Access Key for the Storage Account - please see: [Pre-requisites: Storage Account Key](https://github.com/SupportPartners/microsoft-vdi/blob/3.2/README.md#prerequisites ).**
+**Enter the Access Key for the Storage Account - please see: [Pre-requisites: Storage Account Key](https://github.com/SupportPartners/microsoft-vdi#prerequisites).**
 
 
 ```
@@ -281,7 +281,7 @@ Please note that once the script has completed, the Teradici connector can take 
 
 Make note of your **External IP **that has been allocated to the connector. You’ll need this to connect to a workstation in the next section
 
-ADD EXAMPLE PICTURE IN HERE
+![Plan](Images/CAC-Connectors.png)
 
 **Check the Teradici workstation(s):**
 
@@ -290,7 +290,7 @@ Go to https://cam.teradici.com/app/remoteWorkstations
 The deployed workstation(s) should be listed. They should be marked as managed and running.
 When you click on a workstation it should list the users authorised (assigned) to use that workstation under the heading **MANAGE USER ENTITLEMENTS FOR WORKSTATION**
 
-ADD EXAMPLE PICTURE IN HERE
+![Plan](Images/CAC-Workstations.png)
 
 By design, there is a one-to-one mapping between users and workstations. For example; if 3 users are requested during the script deployment, 3 machines will be also created, one workstation for each user created. You will be able to review user/ workstation assignments here.
 
