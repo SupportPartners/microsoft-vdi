@@ -155,19 +155,27 @@ variable "_artifactsLocationSasToken" {
 }
 
 variable "images_storage_account" {
-  type ="string"
+  type = string
 }
 
 variable "images_container_access_key" {
-  type ="string"
+  type = string
 }
 
 variable "images_container_uri" {
-  type ="string"
+  type = string
 }
 
 variable "tags" {
   description = "Common tags for storage resource"
+}
+
+variable "os_disk_name" {
+  type = string
+}
+
+variable "data_disk_name" {
+  type = string
 }
 
 variable "vm_depends_on" {}

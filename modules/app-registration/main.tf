@@ -4,7 +4,7 @@ resource "azuread_application" "vdi-application" {
 }
 
 resource "azuread_service_principal" "vdi-service-principal" {
-  application_id               = "${azuread_application.vdi-application.application_id}"
+  application_id               = azuread_application.vdi-application.application_id
   app_role_assignment_required = false
 }
 
@@ -14,8 +14,8 @@ resource "random_password" "vdi-service-principal-password" {
 }
 
 resource "azuread_application_password" "vdi-service-principal-app-secret" {
-  application_object_id = "${azuread_application.vdi-application.object_id}"
-  value                 = "${random_password.vdi-service-principal-password.result}"
+  application_object_id = azuread_application.vdi-application.object_id
+  value                 = random_password.vdi-service-principal-password.result
   end_date              = "2040-01-01T00:00:00Z"
 }
 

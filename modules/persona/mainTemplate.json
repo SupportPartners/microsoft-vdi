@@ -162,19 +162,11 @@
         },
         "defaultValue": ""
     },
-    "os_disk_uri": {
+    "image_id": {
       "type": "string",
       "metadata": {
-          "description": "URI to os disk vhd"
-      },
-      "defaultValue": ""
-    },
-    "data_disk_uri": {
-      "type": "string",
-      "metadata": {
-          "description": "URI to data disk vhd"
-      },
-      "defaultValue": ""
+        "description": "Id of the image in shared image gallery."
+      }
     },
     "pcoip_agent_exe": {
       "type": "string",
@@ -215,30 +207,6 @@
   "cmdToExecute":  "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ',variables('Script2Run'),  variables('ScriptParams'))]"
 },
 "resources": [
-  {
-    "type": "Microsoft.Compute/images",
-    "apiVersion": "2019-12-01",
-    "name": "[variables('imageName')]",
-    "location": "[parameters('location')]",
-    "properties": {
-        "storageProfile": {
-            "osDisk": {
-                "osType": "Windows",
-                "osState": "Generalized",
-                "blobUri": "[parameters('os_disk_uri')]",
-                "storageAccountType": "[variables('VMDiskType')]"
-            },
-            "dataDisks": [
-              {
-                "lun": 0,
-                "blobUri": "[parameters('data_disk_uri')]",
-                "storageAccountType": "[variables('VMDiskType')]"
-              }
-            ]
-        },
-        "hyperVGeneration": "V1"
-    }
-  },
   { 
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2019-05-01",
@@ -278,21 +246,20 @@
     "location": "[variables('location')]",
     "tags": "[base64ToJson(base64(parameters('vmTags')))]",
     "dependsOn": [
-      "[variables('nicId')]",
-      "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
+      "[variables('nicId')]"
     ],
     "properties": {
       "hardwareProfile": {
         "vmSize": "[variables('vmSize')]"
       },
       "storageProfile": {
-        "imageReference":  {
-          "id": "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
+        "imageReference": {
+          "id": "[parameters('image_id')]"
         },
         "osDisk": {
           "createOption":"FromImage",
           "managedDisk": {
-            "storageAccountType": "StandardSSD_LRS"
+            "storageAccountType": "[variables('VMDiskType')]"
           }
         },
         "dataDisks": [
@@ -302,7 +269,7 @@
             "lun": 0,
             "createOption": "FromImage",
             "managedDisk": {
-              "storageAccountType": "StandardSSD_LRS"
+              "storageAccountType": "[variables('VMDiskType')]"
             }
           }
         ]

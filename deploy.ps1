@@ -1,7 +1,6 @@
 $owner = "SupportPartners"
 $repo_name = "microsoft-vdi"
-$branch = "master"
-$branchEncoded = [System.Web.HTTPUtility]::UrlEncode($branch)
+$branch = "3.2"
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $wc = New-Object System.Net.WebClient
@@ -48,8 +47,8 @@ Function AzureLogin
 
 Function DownloadProject
 {
-    $uri = "https://github.com/$owner/$repo_name/archive/$branchEncoded.zip"
-    $zip = Join-Path $PSScriptRoot "$branchEncoded.zip"
+    $uri = "https://github.com/$owner/$repo_name/archive/$branch.zip"
+    $zip = Join-Path $PSScriptRoot "$branch.zip"
     $wc.DownloadFile($uri, $zip)
     Expand-Archive -Path $zip -DestinationPath $PSScriptRoot -Force
     Remove-Item -Path $zip
@@ -73,8 +72,8 @@ Function DownloadTerraformPlugins([string] $directory)
     $os = "windows"
     $arch = "amd64"
 
-    # Invoke-WebRequest -Uri "https://github.com/Mastercard/terraform-provider-restapi/releases/download/v1.13.0/terraform-provider-restapi_v1.13.0-windows-amd64" -OutFile "$path/terraform-provider-restapi_v1.13.0-windows-amd64"
-    $name = "terraform-provider-restapi_v1.13.0-${os}-${arch}"
+    $localName = "terraform-provider-restapi_v1.13.0"
+    $name = "${localName}-${os}-${arch}"
     $uri = "https://github.com/Mastercard/terraform-provider-restapi/releases/download/v${restApiProviderVersion}/${name}"
     $path = "${directory}/terraform.d/plugins/windows_amd64"
 
@@ -82,7 +81,14 @@ Function DownloadTerraformPlugins([string] $directory)
     {
         New-Item -ItemType Directory -Force -Path $path
     }
-    Invoke-WebRequest -Uri $uri -OutFile "$path/${name}"
+    Invoke-WebRequest -Uri $uri -OutFile "$path/${localName}"
+}
+
+Function DownloadTools([string] $directory)
+{
+    $vdiwatcheruri = "https://stmsoftdemostoreprod.blob.core.windows.net/tools/VdiVhdWatcher-windows-amd64-1.0.exe"
+    $vdiwatcherpath = Join-Path $directory "VdiVhdWatcher.exe"
+    $wc.DownloadFile($vdiwatcheruri, $vdiwatcherpath)
 }
 
 Function CreateUsers
@@ -97,7 +103,7 @@ Function CreateUsers
             $firstname = Read-Host "Firstname"
             $lastname = Read-Host "Lastname"
             # $isadmin =  Read-Host "Is admin? true/false"
-    
+
             $users += [pscustomobject]@{
                 username = $username
                 password = $password
@@ -116,14 +122,47 @@ Function CreateUsers
     }
 }
 
+Function CreateCAMDeployment([string] $registrationCode)
+{
+    $cam_token_request_body = @{
+        username = Read-Host "CAM Service account username"
+        apiKey = Read-Host "CAM Service account API key"
+    } | ConvertTo-Json
+    $cam_token = ((Invoke-WebRequest "https://cam.teradici.com/api/v1/auth/signin" -ContentType "application/json" -Method POST -Body $cam_token_request_body) | ConvertFrom-Json).data.token
+    $deployment_request_body = @{
+        deploymentName = "vdi-automated-$((Get-Date).ToString("MMMM-dd-HH-mm", [System.Globalization.CultureInfo]::InvariantCulture).ToLowerInvariant())"
+        registrationCode = $registrationCode
+    } | ConvertTo-Json
+    $deployment_id = ((Invoke-WebRequest "https://cam.teradici.com/api/v1/deployments" -ContentType "application/json" -Headers @{"Authorization"=$cam_token} -Method POST -Body $deployment_request_body) | ConvertFrom-Json).data.deploymentId
+    $deployment_service_account_request_body = @{
+        deploymentId = $deployment_id
+    } | ConvertTo-Json
+    $deployment_service_account = ((Invoke-WebRequest "https://cam.teradici.com/api/v1/auth/keys" -ContentType "application/json" -Headers @{"Authorization"=$cam_token} -Method POST -Body $deployment_service_account_request_body) | ConvertFrom-Json).data
+    $deployment_token_request_body = @{
+        username = $deployment_service_account.username
+        apiKey = $deployment_service_account.apiKey
+    } | ConvertTo-Json
+    $deployment_token = ((Invoke-WebRequest "https://cam.teradici.com/api/v1/auth/signin" -ContentType "application/json" -Method POST -Body $deployment_token_request_body) | ConvertFrom-Json).data.token
+    return @{
+        id = $deployment_id
+        token = $deployment_token
+    }
+}
+
 $loggedAccount = AzureLogin
 
+$pcoip_registration_code = Read-Host "CAM PCOIP Registration code"
+$deployment = CreateCAMDeployment($pcoip_registration_code)
+
 $vars =
-""
+"pcoip_registration_code  = `"$pcoip_registration_code`"
+cam_deployement_id          = `"$($deployment.id)`"
+cam_service_token           = `"$($deployment.token)`"
+"
 
 DownloadProject
 
-$repo_directory = Join-Path $PSScriptRoot "$repo_name-$branchEncoded"
+$repo_directory = Join-Path $PSScriptRoot "$repo_name-$branch"
 pushd $repo_directory
 
 CreateUsers
@@ -133,6 +172,7 @@ New-Item -Path . -Name $tfvars_file -ItemType "file" -Force -Value $vars
 
 DownloadTerraform($repo_directory)
 DownloadTerraformPlugins($repo_directory)
+DownloadTools($repo_directory)
 
 .\terraform.exe init
 .\terraform.exe apply -var-file="$tfvars_file"

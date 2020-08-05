@@ -5,27 +5,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-data "template_file" "wait-for-images-script" {
-  template = file("${path.module}/wait-for-images.ps1.template")
-
-  vars = {
-    img_storage_account_name   = var.images_storage_account
-    img_storage_account_key    = var.images_container_access_key
-  }
-  depends_on      = [var.vm_depends_on]
-}
-
-resource "local_file" "wait-for-images-script-prepare" {
-    content     = data.template_file.wait-for-images-script.rendered
-    filename    = "${path.module}/wait-for-images.ps1"
-}
-
 resource "null_resource" "wait-for-images" {
-  depends_on = [local_file.wait-for-images-script-prepare]
+  depends_on      = [var.vm_depends_on]
 
   provisioner "local-exec" {
-    command = "${path.module}/wait-for-images.ps1"
-    interpreter = ["PowerShell", "-Command"]
+    command = "VdiVhdWatcher --name ${var.images_storage_account} --container vm-images --access-key ${var.images_container_access_key} --blob ${var.os_disk_name} --blob ${var.data_disk_name}"
+  }
+}
+
+resource "azurerm_image" "workstation" {
+  depends_on      = [var.vm_depends_on, null_resource.wait-for-images]
+
+  name                = "ARMTemplate-windows-std-image"
+  location            = var.azure_region
+  resource_group_name = var.resource_group_name
+
+  os_disk {
+    os_type  = "Windows"
+    os_state = "Generalized"
+    blob_uri = "${var.images_container_uri}/${var.os_disk_name}"
+  }
+
+  data_disk {
+    blob_uri = "${var.images_container_uri}/${var.data_disk_name}"
+    lun = 0
   }
 }
 
@@ -33,7 +36,7 @@ resource "azurerm_template_deployment" "windows" {
   count               = var.instance_count
   name                = "ARMTemplate-windows-std-${count.index}"
   resource_group_name = var.resource_group_name
-  template_body       = "${file("${path.module}/mainTemplate.json")}"
+  template_body       = file("${path.module}/mainTemplate.json")
   parameters = {
     "base_name"                   = "${var.base_name}"
     "count_index"                 = "${format("%02d", count.index + 1)}"
@@ -59,8 +62,7 @@ resource "azurerm_template_deployment" "windows" {
     "TeradiciRegKey"              = "${var.pcoip_registration_code}"
     "_artifactsLocation"          = "${var._artifactsLocation}"
     "_artifactsLocationSasToken"  = "${var._artifactsLocationSasToken}"
-    "os_disk_uri"                 = "${var.images_container_uri}/win10-2004-NV-19_06img.vhd"
-    "data_disk_uri"               = "${var.images_container_uri}/win10-2004-NV-image-19june20disk2.vhd"
+    image_id                      = azurerm_image.workstation.id
     "pcoip_agent_exe"             = "pcoip-agent-graphics_20.07.0.exe"
     "vmTags"                      = "${jsonencode(merge(var.tags, map(
         "Type", "workstation",
@@ -69,7 +71,7 @@ resource "azurerm_template_deployment" "windows" {
     )))}"
   }
   deployment_mode = "Incremental"
-  depends_on      = [var.vm_depends_on, null_resource.wait-for-images]
+  depends_on      = [var.vm_depends_on, azurerm_image.workstation]
 }
 
 resource "azurerm_template_deployment" "shutdown_schedule_template" {
