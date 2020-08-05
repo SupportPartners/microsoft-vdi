@@ -192,17 +192,6 @@ var.cac_admin_password
   Enter a value:<password>
 ```
 
-**Enter Client name for tags**
-
-This will set the tags in your Azure subscription, it is recommended the client uses their organisation name. Tag names can’t contain the following characters: **<, >, %, &, \, ?, /**
-
-```
-var.client_name
-  Client name for tags. User entry
-
-  Enter a value:
-  ```
-
 **Enter the Azure Region where you would like to deploy the resources**
 
 Example below is for Northen Europe, please refer to the list for the corresponding region. [Azure Region List](https://github.com/SupportPartners/microsoft-vdi/blob/master/Azurerregionlist.txt)
