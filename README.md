@@ -216,7 +216,7 @@ Set the size of the Azure Files volume that will be created as part of the deplo
 var.storage_capacity
   Provisioned capacity of file share in GiB. Possible values 100-102400. Default is 5120 Gib
 
-  Enter a value:
+  Enter a value: 2048
 ```
 
 **Enter a password for the Local Administrator account of the deployed workstations**
