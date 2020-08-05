@@ -143,7 +143,7 @@ Password for the Adminstrator user
 ```
 
 
-**Enter the Access Key for the Storage Account (please see: [Pre-requisites: Storage Account Key](https://github.com/SupportPartners/microsoft-vdi/blob/3.2/README.md#prerequisites ).**
+**Enter the Access Key for the Storage Account - please see: [Pre-requisites: Storage Account Key](https://github.com/SupportPartners/microsoft-vdi/blob/3.2/README.md#prerequisites ).**
 
 
 ```
@@ -166,6 +166,7 @@ var.cac_admin_password
 
 **Enter the Azure Region where you would like to deploy the resources**
 
+Example below is for Northen Europe, please refer to the list for the corresponding region. [Azure Region List](https://github.com/SupportPartners/microsoft-vdi/blob/master/Azurerregionlist.txt)
 ```
 var.location
   The Azure Region in which all resources in this example should be created.
