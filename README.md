@@ -88,16 +88,19 @@ The script will utilise the Azure CLI to authenticate you to your subscription. 
 
 The script will utilise the Azure CLI to authenticate you to your subscription. You can install the CLI using Microsoft Documentation https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest&tabs=azure-cli
 
-**Download the deployment script here** https://github.com/SupportPartners/microsoft-vdi/tree/master/scripts
+**Download the deployment script**
 
 You have the choice of 3 scripts depending on which Persona you choose the relevent resources will be deployed. You can see what will be deployed for each persona in [PersonaDetails.md](https://github.com/SupportPartners/microsoft-vdi/blob/master/PeronaDetails.md)
 
-Download link here, here and here.
-Download to C:\temp
+Persona1 - https://github.com/SupportPartners/microsoft-vdi/raw/master/scripts/persona-1.ps1
+Persona2 - https://github.com/SupportPartners/microsoft-vdi/raw/master/scripts/persona-2.ps1
+Persona3 - https://github.com/SupportPartners/microsoft-vdi/raw/master/scripts/persona-3.ps1
 
-**Run the script from a Powershell run as current logged in user**
+Copy the script to C:\temp to avoid character limits
 
 NOTE: This script cannot be situated too deep within subfolders else the script will error flagging a 248 character limit
+
+**Run the script from a Powershell run as current logged in user**
 
 `C:\path\to\deploy.ps1`
 
@@ -369,9 +372,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](https://gi
 ## Acknowledgments
 
 * Teradici - GitHub https://github.com/teradici
-
-
-
-
-
-
