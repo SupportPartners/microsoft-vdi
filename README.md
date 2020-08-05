@@ -65,8 +65,8 @@ Create the CAM service account
 * Enter a friendly name for the account and click ‘CREATE’
 * Ensure you make a note of the **Username** and the **API key** when presented. You will require this later.
 
-**string: Example Only **
-`{"keyId":"5f1021ef7240ed006725918b","username":"**5f1021ef7240ed006725918b**","apiKey":"**eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJvaWQiOiI1ZjBjYTcwY2M4NmI1YzAwMTJkYWVjYmQiLCJvd25lck9pJYR6IjE5Zjk5M2NjLTdlYTctNDJkNS1iYTc1LTA5OTY0MWJmYjg3OCIsImp0aSI6Ijk1ZDJmMDhlLWI2YTktNGZiNC05Y2Q5LWZiM2JkZDU5YTYxOSIsImlhdCI6MTU5NDg5Mjc4NSwiZXhwIjoxNjg5NTAwNzg1fQ.1X62a0wha-yq0xeWzkxO3GkLSDa2TRdioWYL1dHMIDNC15dmspIZP7vfFdaq8PmAJnefS_kT6SULPM0—QwPpA**","keyName":"TestDeploy"}`
+**string: Example Only**
+`{"keyId":"5f1021ef7240ed006725918b","username":" **5f1021ef7240ed006725918b** ","apiKey":" **eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJvaWQiOiI1ZjBjYTcwY2M4NmI1YzAwMTJkYWVjYmQiLCJvd25lck9pJYR6IjE5Zjk5M2NjLTdlYTctNDJkNS1iYTc1LTA5OTY0MWJmYjg3OCIsImp0aSI6Ijk1ZDJmMDhlLWI2YTktNGZiNC05Y2Q5LWZiM2JkZDU5YTYxOSIsImlhdCI6MTU5NDg5Mjc4NSwiZXhwIjoxNjg5NTAwNzg1fQ.1X62a0wha-yq0xeWzkxO3GkLSDa2TRdioWYL1dHMIDNC15dmspIZP7vfFdaq8PmAJnefS_kT6SULPM0—QwPpA** ","keyName":"TestDeploy"}`
 
 From the API String copied out of the CAM portal you need to only use the sections highlighted in **bold** above
 
@@ -276,10 +276,10 @@ NEED TO ADD IN THE ERROR MESSAGE YOU WILL GET IF THERE ARE NOT ENOUGH CORES AVAL
 
 Go to https://cam.teradici.com/app/connectors
 
-The deployed connector should be in the list as healthy for both **HEALTH** and **CERTIFICATE EXPIRY. **
+The deployed connector should be in the list as healthy for both **HEALTH** and **CERTIFICATE EXPIRY.**
 Please note that once the script has completed, the Teradici connector can take an additional 15-20 minutes to complete. If the connector is reported as ‘unhealthy’ refresh the page after this time has elapsed.
 
-Make note of your **External IP **that has been allocated to the connector. You’ll need this to connect to a workstation in the next section
+Make note of your **External IP** that has been allocated to the connector. You’ll need this to connect to a workstation in the next section
 
 ![Plan](Images/CAC-Connectors.png)
 
