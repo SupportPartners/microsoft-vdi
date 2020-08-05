@@ -84,9 +84,9 @@ The script will utilise the Azure CLI to authenticate you to your subscription. 
 
 ## Deployment
 
-**Download the deployment script here** https://github.com/SupportPartners/microsoft-vdi/scripts
+**Download the deployment script here** https://github.com/SupportPartners/microsoft-vdi/tree/master/scripts
 
-You have the choice of 3 scripts depending on which Persona you choose the relevent resources will be deployed. You can see what will be deployed for each persona in PersonaDetails.md
+You have the choice of 3 scripts depending on which Persona you choose the relevent resources will be deployed. You can see what will be deployed for each persona in [PersonaDetails.md](https://github.com/SupportPartners/microsoft-vdi/blob/master/PeronaDetails.md)
 
 **Run the script from a Powershell run as current logged in user**
 
@@ -95,6 +95,7 @@ NOTE: This script cannot be situated too deep within subfolders else the script 
 `C:\path\to\deploy.ps1`
 
 Resources for the deployment will be downloaded from GitHub into the current working directory.
+This includes Teraform and the dependancies required for deployment.
 
 **Authenticate to Azure**
 
@@ -175,7 +176,7 @@ var.cac_admin_password
 
 **Enter Client name for tags**
 
-This needs description
+This will set the tags in your Azure subscription, it is recommended the client uses their organisation name. Tag names can’t contain the following characters: **<, >, %, &, \, ?, /**
 
 ```
 var.client_name
@@ -209,7 +210,7 @@ var.safe_mode_admin_password
 
 **Enter the desired capacity of the Azure file share in GiB**
 
-This need description
+Set the size of the Azure Files volume that will be created as part of the deployment. To achieve the desired performance recommended value of 2TiB
 
 ```
 var.storage_capacity
