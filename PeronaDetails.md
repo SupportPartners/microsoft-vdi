@@ -2,14 +2,25 @@
 
 ## You can choose between 3 Personas:
 
-## Persona 1: News/Sports/Events/Digital
-For users making simple edits with up to two HD video layers and a lower third, user will edit from attached SSD if a single deployment or shared storage if part of a workgroup. This persona will not need to require high-resolution 4K codecs and will use only a few effects such as color correction, scale/transform and speed.
- 
+## Persona 1: Short Form, Online and Fast Turnaround
 
-* Resolution: Up to 1080i30 (1920X1080)
-* Codecs: XDCAM-50
-* Estimated disk bandwidth required per simultaneous user: 170 Mbps
-* Azure Instance type: Standard_NV6
+Producing content for:
+
+News / Sports / Events / Digital / Social Media / Re-versioning
+
+Optimised for creating simpler or fast turnaround edits with 2-3 HD video layers.
+
+Supports realtime playback for gfx overlays, lower thirds, colour correction and video effects.
+
+Content is hosted on an SSD if a single deployment or shared storage if part of a workgroup.
+
+* Resolution: Up to 1920x1080
+* Frame-rate: Up to 30fps
+* Codecs: ProRes Proxy/LT/422, DNxHD 36/120, XD50, H264
+* CPU: 6 Cores
+* GPU: 1/2 Tesla M60
+* Estimated bandwidth per user: 170 Mbps
+
 
  
 Virtual Machine: 
@@ -21,15 +32,26 @@ Virtual Machine:
 
 Storage: Azure Standard File Storage
 
-## Persona 2: Advertising/Broadcasters/Studio
-For users creating typical edits using 3 HD video layers, 2 graphics and 4-8 audio tracks, user will edit from attached SSD if a single deployment or shared storage if part of a workgroup. User may access other Adobe CC applications such as After Effects which will require high processing speeds
- 
+## Persona 2: Long Form, Complex Editing and Graphics
 
-* Resolution: up to 1080i60 (1920X1080)
-* Codec: DNxHD 145 and DNxHR SQ or ProRes 422 and ProRes HQ
-* Estimated disk bandwidth required per simultaneous user: 340 Mbps
-* Azure Instance type: Standard_NV12s_v3 
+Producing content for:
 
+Agencies / Broadcasters / Studios
+
+Optimised for all editing tasks with 3-5 HD video layers and 2 GFX overlays.
+
+Provides realtime playback for complex effects in Premiere and other Adobe CC applications such as After Effects.
+
+Supports 4K editing with correct workflow and format configuration.
+
+Content is hosted on an SSD if a single deployment or shared storage if part of a workgroup.
+
+* Resolution: 1920x1080 to 4K
+* Frame-rate: Up to 30fps
+* Codecs: ProRes 422/HQ, DNxHD 145/185, DNxHR SQ
+* CPU: 12 Cores
+* GPU: 1/2 Tesla M60
+* Estimated bandwidth per user: 340 Mbps
  
 Virtual Machine: 
 
@@ -41,14 +63,24 @@ Standard_NV12s_v3 instance provides:
 
 Storage: Azure Premium File Storage
 
-## Persona 3: Promos/High-end Advertising
-For personas creating graphics for other groups within the organization using brand guidelines created by Marketing. This persona typically needs the highest performance system, as render times are critical. They are mostly creating in After Effects, using high fidelity codecs that are designed for compositing, not real-time playback. User will edit from attached SSD if a single deployment or shared storage if part of a workgroup.
- 
+## Persona 3: Graphics, Compositing, and Finishing
 
-* Resolution: Up to 1080i60
-* Codec: DNxHD 145 and DNxHR SQ or ProRes 422 and ProRes HQ
-* Estimated disk bandwidth required per simultaneous user: 450 Mbps
+Producing content for:
 
+Graphics / Promos / High-end Advertising / High-end Broadcast
+
+Highest performance machine for compositing, graphics and rendering work when meeting tight deadlines.
+
+Additionally supports 4K, HDR, or 60fps editing with correct workflow and format configuration.
+
+Content is hosted on an SSD if a single deployment or shared storage if part of a workgroup.
+
+* Resolution: 1920x1080 to 4K
+* Frame-rate: Up to 60fps
+* Codecs: ProRes HQ/4444, DNxHD 185, DNxHR SQ
+* CPU: 24 Cores
+* GPU: Tesla M60
+* Estimated bandwidth per user: 450 Mbps
  
 Virtual Machine: 
 
@@ -64,9 +96,9 @@ Storage: Azure Premium Files
 
 |Persona Name	|Persona	|Resolution	|Codecs	|Estimated disk bandwidth required per simultaneous user	|Azure Instance type	|Azure File Storage	|
 |---	|---	|---	|---	|---	|---	|---	|
-|Persona1	|News/Sports/Events/Digital	|Up to 1080i30 (1920X1080)	|XDCAM-50	|170 Mbps	|Standard_NV6	|Standard	|
-|Persona2	|Advertising/Broadcasters/Studios	|Up to 1080i60 (1920X1080)	|DNxHD 145 DNxHR SQ or ProRes 422 ProRes HQ     |340 Mbps	|Standard_NV12s_v3	|Premium	|
-|Persona3	|Promos/High-end Advertising	|Up to 1080i60	|DNxHD 145  DNxHR SQ or ProRes 422 ProRes HQ	|450 Mbps	|Standard_NV24s_v3	|Premium	|
+|Persona1	|Short Form, Online and Fast Turnaround	|Up to 1080i30 (1920X1080)	|XDCAM-50	|170 Mbps	|Standard_NV6	|Standard	|
+|Persona2	|Long Form, Complex Editing and Graphics	|Up to 1080i60 (1920X1080)	|DNxHD 145 DNxHR SQ or ProRes 422 ProRes HQ     |340 Mbps	|Standard_NV12s_v3	|Premium	|
+|Persona3	|Graphics, Compositing, and Finishing	|Up to 1080i60	|DNxHD 145  DNxHR SQ or ProRes 422 ProRes HQ	|450 Mbps	|Standard_NV24s_v3	|Premium	|
 
 ## Instance Size Summary
 
