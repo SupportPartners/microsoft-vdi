@@ -42,7 +42,7 @@ resource "null_resource" "copy-assets" {
   }
 
   provisioner "local-exec" {
-    command = "az storage file copy start-batch --destination-share ${azurerm_storage_share.file-share.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key \"${azurerm_storage_account.storage-account.primary_access_key}\" --source-account-name ${var.assets_storage_account} --source-account-key \"${var.assets_storage_account_key}\" --source-share ${var.assets_storage_container} --pattern \"*\""
+    command = "az storage file copy start-batch --destination-share ${azurerm_storage_share.file-share.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-account-key ${var.assets_storage_account_key} --source-share ${var.assets_storage_container} --pattern *"
   }
 }
 
