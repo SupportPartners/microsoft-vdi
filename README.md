@@ -100,11 +100,11 @@ Once authenticated you will be asked which subscription you wish to deploy.
 
 `Please choose the account number: `
 
-**You’ll be prompted to enter your CAM PCoIP Registration code collected in Pre-Requisite 1.**
+**You’ll be prompted to enter your CAM PCoIP Registration code collected in [Pre-Requisite 1](https://github.com/SupportPartners/microsoft-vdi#prerequisites)**
 
 `CAM PCOIP Registration code:`
 
-**You’ll be prompted for the CAM Service account credentials gathered in the CAM pre-requisite**
+**You’ll be prompted for the CAM Service account credentials gathered in the [CAM pre-requisite](https://github.com/SupportPartners/microsoft-vdi#prerequisites)**
 
 * Enter the **username** and hit return
 * Enter the **API Key** and hit return
@@ -180,7 +180,7 @@ var.location
   Enter a value:northeurope
 ```
 
-**Enter your chosen password for the Directory Services Restore Mode**
+**Enter a password for the Directory Services Restore Mode**
 
 This will be the password for the Active Directory DSRM
 
@@ -191,7 +191,7 @@ var.safe_mode_admin_password
   Enter a value:<password>
 ```
 
-**Enter your chosen password for the Local Administrator account of the deployed workstations**
+**Enter a password for the Local Administrator account of the deployed workstations**
 
 This will be the password for the Local Administrator account (WINadmin) for each of the deployed user workstations
 
