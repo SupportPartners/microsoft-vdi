@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "storage-account" {
-  name                     = "ss${var.storage_name}${var.deployment_index}"
+  name                     = "ss${var.storage_name}${var.index}"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = var.is_premium_storage == true ? "Premium": "Standard"
@@ -19,7 +19,7 @@ resource "azurerm_storage_share" "file-share" {
 }
 
 resource "azurerm_storage_account" "diagnostic-storage-account" {
-  name                     = "stdiag${var.diag_storage_name}${var.deployment_index}"
+  name                     = "stdiag${var.diag_storage_name}${var.index}"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
