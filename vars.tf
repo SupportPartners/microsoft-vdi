@@ -145,6 +145,16 @@ variable "vm_persona" {
   description = "Persona type of deploying VM"
 }
 
+variable "vm_shutdown_time" {
+  description = "The time to scheduled VM shutdown e.g. 18:00"
+  type = string
+}
+
+variable "vm_shutdown_timezone" {
+  description = "The timezone to scheduled VM shutdown e.g. Pacific Standard Time"
+  type = string
+}
+
 variable "key_vault_id" {
   description = "The key vault resource ID"
   type        = string
