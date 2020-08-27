@@ -34,43 +34,6 @@ resource "azurerm_storage_container" "vm-images-container" {
   container_access_type = "private"
 }
 
-locals {
-  today = timestamp()
-  images_source_connection_string = "DefaultEndpointsProtocol=https;AccountName=${var.assets_storage_account};AccountKey=${var.assets_storage_account_key};EndpointSuffix=core.windows.net"
-}
-
-data "azurerm_storage_account_sas" "vm-images-sas" {
-  connection_string = local.images_source_connection_string
-  https_only        = true
-
-  resource_types {
-    service   = false
-    container = true
-    object    = true
-  }
-
-  services {
-    blob  = true
-    queue = false
-    table = false
-    file  = false
-  }
-
-  start  = formatdate("YYYY-MM-DD", local.today)
-  expiry = formatdate("YYYY-MM-DD", timeadd(local.today, "48h"))
-
-  permissions {
-    read    = true
-    write   = false
-    delete  = false
-    list    = true
-    add     = false
-    create  = false
-    update  = false
-    process = false
-  }
-}
-
 data "azurerm_storage_account_sas" "diag_sa_sas" {
   connection_string = azurerm_storage_account.diagnostic-storage-account.primary_connection_string
   https_only        = true
@@ -111,7 +74,7 @@ resource "null_resource" "copy-assets" {
   }
 
   provisioner "local-exec" {
-    command = "az storage file copy start-batch --destination-share ${azurerm_storage_share.file-share.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-account-key ${var.assets_storage_account_key} --source-share ${var.assets_storage_container}"
+    command = "az storage file copy start-batch --destination-share ${azurerm_storage_share.file-share.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key} --source-account-name ${var.assets_storage_account} --source-sas ${var.assets_storage_account_key} --source-share ${var.assets_storage_container}"
   }
 }
 
@@ -126,7 +89,7 @@ resource "null_resource" "copy-vm-images" {
     command = "--recursive"
     interpreter = [
       "azcopy", "copy",
-      "https://${var.assets_storage_account}.blob.core.windows.net/${var.images_storage_container}/${var.os_disk_name}${data.azurerm_storage_account_sas.vm-images-sas.sas}",
+      "https://${var.assets_storage_account}.blob.core.windows.net/${var.images_storage_container}/${var.os_disk_name}${var.assets_storage_account_key}",
       "https://${azurerm_storage_account.diagnostic-storage-account.name}.blob.core.windows.net/${azurerm_storage_container.vm-images-container.name}/${var.os_disk_name}${data.azurerm_storage_account_sas.diag_sa_sas.sas}"
     ]
   }
@@ -135,7 +98,7 @@ resource "null_resource" "copy-vm-images" {
     command = "--recursive"
     interpreter = [
       "azcopy", "copy",
-      "https://${var.assets_storage_account}.blob.core.windows.net/${var.images_storage_container}/${var.data_disk_name}${data.azurerm_storage_account_sas.vm-images-sas.sas}",
+      "https://${var.assets_storage_account}.blob.core.windows.net/${var.images_storage_container}/${var.data_disk_name}${var.assets_storage_account_key}",
       "https://${azurerm_storage_account.diagnostic-storage-account.name}.blob.core.windows.net/${azurerm_storage_container.vm-images-container.name}/${var.data_disk_name}${data.azurerm_storage_account_sas.diag_sa_sas.sas}"
     ]
   }
