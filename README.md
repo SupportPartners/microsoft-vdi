@@ -40,9 +40,17 @@ The script will deploy the following infrastructure in a self contained Azure Re
 * An Azure Standard or Premium File Share up to 20TB in size
 * Demo projects and media on the Azure File Share ready for testing
 
-## 1 Prerequisites 
+## 1. Prerequisites 
 
 There are a number of prerequisites you must have to successfully deploy this infrastructure
+
+**Pre-requisites: Azure permissions**
+
+The account used to run the script will require necessary permissions within Azure prior to running the scripts
+
+* The Azure account used to run the script will require the ‘Owner’ role assignment in the subscription or be listed as a ‘Co-administrator’.
+
+
 
 **Pre-requisites:. Teradici CAM License (PCoIP registration code)**
 
@@ -79,7 +87,7 @@ Create the CAM service account
 
 ---
 
-## 2 Deployment Setup
+## 2. Deployment Setup
 
 **Ensure internet explorer has been run at least once and the initial setup prompt has been actioned on the machine the Deploy script is run from.**
 If Internet Explorer has not been run once on the machine you run the script on, you will encounter errors in the deployment process.
@@ -106,7 +114,9 @@ Persona3 - https://github.com/SupportPartners/microsoft-vdi/raw/master/scripts/p
 
 NOTE: This script cannot be situated too deep within subfolders else the script will error flagging a 248 character limit
 
-## 3 Deployment 
+---
+
+## 3. Deployment 
 
 **Run the script from a Powershell run as current logged in user**
 
@@ -272,7 +282,9 @@ Completion Output:
 
 ![Plan](Images/ApplyComplete.png)
 
-## 4 Connecting to a workstation
+---
+
+## 4. Connecting to a workstation
 
 **To access via Teradici PCoIP client:**
 
@@ -300,7 +312,7 @@ Completion Output:
 
 ---
 
-## Testing the deployment has been successful
+## 5. Testing the deployment has been successful
 
 
 **Check the Teradici connector health:**
@@ -327,7 +339,15 @@ By design, there is a one-to-one mapping between users and workstations. For exa
 
 ---
 
-## Connecting to Active Directory
+## 6. Setting the Premiere Cache location:
+
+As part of the deployment, a separate local disk drive named **DATA Y:** has been provisioned as the Media Cache Files and Media Cache Database location for when editing within Premiere.
+
+This location will need to be set manually when creating a new project in Premiere. Within the application, navigate to: **Edit> Preferences> Media Cache** and set the Media Cache Files and Media Cache Database location to  **DATA Y:> Premiere Caches**
+
+---
+
+## 7. Connecting to Active Directory
 
 As part of the deployment, an Active Directory server will be installed and configured for the purposes of the demo. The Active Directory server will hold demo user and computer objects as well as group policies to simplify configuration.
 
@@ -348,6 +368,19 @@ under ‘**Source IP address**’ add the IP ensuring that you separate any addi
 
 ![Plan](Images/RDP1.png)
 ![Plan](Images/RDP2.png)
+
+---
+
+## Admistrator Accounts
+
+During the deployment process the passwords are defined as you entered them.
+The usernames for each are as follows:
+
+* Active Directory Admin User Name: **ADadmin**
+
+* CAC Admin User Name: **CACadmin**
+
+* Windows Local Administrator User: **WINadmin**
 
 ---
 
