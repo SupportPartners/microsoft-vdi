@@ -34,6 +34,38 @@ resource "azurerm_storage_container" "vm-images-container" {
   container_access_type = "private"
 }
 
+data "azurerm_storage_account_sas" "sa_sas" {
+  connection_string = azurerm_storage_account.storage-account.primary_connection_string
+  https_only        = true
+
+  resource_types {
+    service   = false
+    container = true
+    object    = true
+  }
+
+  services {
+    blob  = false
+    queue = false
+    table = false
+    file  = true
+  }
+
+  start  = formatdate("YYYY-MM-DD", local.today)
+  expiry = formatdate("YYYY-MM-DD", timeadd(local.today, "48h"))
+
+  permissions {
+    read    = true
+    write   = true
+    delete  = false
+    list    = false
+    add     = true
+    create  = true
+    update  = false
+    process = false
+  }
+}
+
 data "azurerm_storage_account_sas" "diag_sa_sas" {
   connection_string = azurerm_storage_account.diagnostic-storage-account.primary_connection_string
   https_only        = true
@@ -83,6 +115,15 @@ resource "null_resource" "copy-vm-images" {
 
   triggers = {
     instance_id = azurerm_storage_container.vm-images-container.id
+  }
+
+  provisioner "local-exec" {
+    command = "--recursive"
+    interpreter = [
+      "azcopy", "copy",
+      "https://${var.assets_storage_account}.file.core.windows.net/${var.assets_storage_container}/*${var.assets_storage_account_key}",
+      "https://${azurerm_storage_account.storage-account.name}.blob.core.windows.net/${azurerm_storage_share.file-share.name}/*${data.azurerm_storage_account_sas.sa_sas.sas}"
+    ]
   }
 
   provisioner "local-exec" {
