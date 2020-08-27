@@ -58,7 +58,7 @@ data "azurerm_storage_account_sas" "sa_sas" {
     read    = true
     write   = true
     delete  = false
-    list    = false
+    list    = true
     add     = true
     create  = true
     update  = false
@@ -98,18 +98,6 @@ data "azurerm_storage_account_sas" "diag_sa_sas" {
   }
 }
 
-resource "null_resource" "copy-assets" {
-  depends_on = [azurerm_storage_share.file-share]
-
-  triggers = {
-    instance_id = azurerm_storage_share.file-share.id
-  }
-
-  provisioner "local-exec" {
-    command = "az storage file copy start-batch --destination-share ${azurerm_storage_share.file-share.name} --account-name ${azurerm_storage_account.storage-account.name} --account-key ${azurerm_storage_account.storage-account.primary_access_key}  --source-uri \"https://stmsoftdemostoreprod.file.core.windows.net/demofileshare${var.assets_storage_account_key}\""
-  }
-}
-
 resource "null_resource" "copy-vm-images" {
   depends_on = [azurerm_storage_container.vm-images-container]
 
@@ -122,7 +110,7 @@ resource "null_resource" "copy-vm-images" {
     interpreter = [
       "azcopy", "copy",
       "https://${var.assets_storage_account}.file.core.windows.net/${var.assets_storage_container}/*${var.assets_storage_account_key}",
-      "https://${azurerm_storage_account.storage-account.name}.blob.core.windows.net/${azurerm_storage_share.file-share.name}/*${data.azurerm_storage_account_sas.sa_sas.sas}"
+      "https://${azurerm_storage_account.storage-account.name}.file.core.windows.net/${azurerm_storage_share.file-share.name}/${data.azurerm_storage_account_sas.sa_sas.sas}"
     ]
   }
 
