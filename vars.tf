@@ -200,11 +200,6 @@ variable "safe_mode_admin_password" {
   type        = string
 }
 
-variable "client_name" {
-  description = "Client name for tags. User entry"
-  type        = string
-}
-
 variable "environment" {
   description = "Environment for tags"
   type        = string
@@ -262,7 +257,6 @@ locals {
   common_tags                = "${map(
     "Created Date", "${formatdate("MMM DD, YYYY", time_static.date_creation.id)}",
     "Environment", "${var.environment}",
-    "Client Name", "${var.client_name}",
     "Createdby", "Supportpartners"
   )}"
   vm_count                   = length(csvdecode(file("${path.root}/domain_users_list.csv")))
