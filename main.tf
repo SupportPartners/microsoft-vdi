@@ -5,7 +5,7 @@ resource "time_static" "date_creation" {}
 
 resource "azurerm_resource_group" "vdi_resource_group" {
   location = var.common_location
-  name     = var.resource_group_name != "" ? var.resource_group_name : "rg-${var.base_name}-infra-${var.deployment_index}"
+  name     = var.resource_group_name != "" ? "${var.resource_group_name}-${var.deployment_index}" : "rg-${var.base_name}-infra-${var.deployment_index}"
 }
 
 module "app-registration" {
@@ -272,4 +272,8 @@ module "persona-3" {
   _artifactsLocationSasToken  = var._artifactsLocationSasToken
   tags                        = local.common_tags
   vm_depends_on               = module.cac.cac_created
+}
+
+output "cac_ip_address" {
+  value = module.network.cac_public_ip
 }
