@@ -273,3 +273,7 @@ module "persona-3" {
   tags                        = local.common_tags
   vm_depends_on               = module.cac.cac_created
 }
+
+output "cac_ip_address" {
+  value = module.network.cac_public_ip
+}
