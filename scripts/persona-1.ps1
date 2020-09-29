@@ -1,6 +1,6 @@
 $owner = "SupportPartners"
 $repo_name = "microsoft-vdi"
-$branch = "4.1"
+$branch = "4.2"
 
 $sysDrive = (Get-WmiObject Win32_OperatingSystem).SystemDrive
 $basePath = [IO.Path]::Combine("$sysDrive\", "Temp", "vdi", (Get-Date).ToString("yyyyMMdd_HHmmss"))
