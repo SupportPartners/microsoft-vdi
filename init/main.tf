@@ -61,11 +61,11 @@ resource "azurerm_storage_blob" "windows-std-script" {
 
 resource "azurerm_storage_blob" "pcoip-agent" {
   depends_on             = [azurerm_storage_container.script]
-  name                   = "pcoip-agent-standard_19.11.0.exe"
+  name                   = "pcoip-agent-graphics_21.01.2.exe"
   storage_account_name   = azurerm_storage_account.script.name
   storage_container_name = azurerm_storage_container.script.name
   type                   = "Block"
-  source                 = "${path.module}/pcoip-agent-standard_19.11.0.exe" 
+  source                 = "${path.module}/pcoip-agent-graphics_21.01.2.exe"
 }
 
 resource "azurerm_storage_blob" "background-img" {
