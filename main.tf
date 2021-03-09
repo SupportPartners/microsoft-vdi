@@ -172,7 +172,7 @@ module "persona-1" {
   nsgID                       = module.network.nsg_id
   subnetID                    = module.network.subnet_workstation.id
   subnet_name                 = module.network.subnet_workstation.name
-  vm_size                     = "Standard_NV6"
+  vm_size                     = "Standard_NV12s_v3"
   vm_shutdown_time            = var.vm_shutdown_time
   vm_shutdown_timezone        = var.vm_shutdown_timezone
   application_id              = var.application_id
